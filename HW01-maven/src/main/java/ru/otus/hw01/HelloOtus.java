@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * To run JAR execute: java --enable-preview -jar target/HW01-maven-jar-with-dependencies.jar
+ * To run JAR execute: java --enable-preview -jar target/HW01-maven-2019-06-SNAPSHOT-jar-with-dependencies.jar
  */
 
 public class HelloOtus {
