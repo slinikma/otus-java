@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ru.otus</groupId>
+    <artifactId>OtusJavaHW</artifactId>
+    <!--suppress MavenPropertyInParent -->
+    <version>${revision}</version>
+  </parent>
+
+  <groupId>ru.otus</groupId>
+  <artifactId>HW01-maven</artifactId>
+
+  <properties>
+    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
+    <jar.name>${project.name}</jar.name>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.name}</finalName>
+  </build>
+
+</project>

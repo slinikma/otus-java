@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Project Object Model -->
+    <!-- All POMs extend the Super POM unless explicitly set -->
+    <!--<parent>*</parent>-->
+
+    <groupId>ru.otus</groupId>
+    <artifactId>OtusJavaHW</artifactId>
+    <version>${revision}</version>
+
+    <packaging>pom</packaging>
+
+    <developers>
+        <developer>
+            <name>Mashnyaga Nikita</name>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>HW01-maven</module>
+    </modules>
+
+  <properties>
+
+    <!--region General-->
+    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
+    <jar.name>${project.name}-${revision}</jar.name>
+    <revision>2019-06-SNAPSHOT</revision>
+    <java.version>12</java.version>
+    <minimal.maven.version>3.5.0</minimal.maven.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!--endregion-->
+
+    <!--region BOMs -->
+    <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+    <!--endregion-->
+
+    <!--region Libs -->
+    <com.google.guava.version>28.0-jre</com.google.guava.version>
+    <error_prone_annotations.version>2.3.3</error_prone_annotations.version>
+    <commons-io.version>2.6</commons-io.version>
+    <jmh-core.version>1.21</jmh-core.version>
+    <checker.version>2.9.0</checker.version>
+    <annotations.version>17.0.0</annotations.version>
+    <jcip-annotations.version>1.0</jcip-annotations.version>
+    <spotbugs.version>4.0.0-beta3</spotbugs.version>
+    <lombok.version>1.18.8</lombok.version>
+    <vavr.version>0.10.0</vavr.version>
+    <jol-core.version>0.9</jol-core.version>
+    <!--endregion-->
+
+    <!--region Testing - JUnit, AssertJ, Mockito, Hacrest -->
+    <junit-jupiter.version>5.3.2</junit-jupiter.version>
+    <assertj.version>3.12.2</assertj.version>
+    <java-hamcrest.version>2.0.0.0</java-hamcrest.version>
+    <mockito.version>2.27.0</mockito.version>
+    <!--endregion-->
+
+    <!--region Plugins-->
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
+    <maven-assembly-plugin.descriptorSuffix>jar-with-dependencies</maven-assembly-plugin.descriptorSuffix>
+    <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+    <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+    <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+    <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+    <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    <exec.executable>java</exec.executable>
+    <lombok-maven-plugin.version>1.18.6.0</lombok-maven-plugin.version>
+    <!--endregion-->
+
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!--region BOMs-->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!--endregion-->
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${com.google.guava.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_annotations</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vavr</groupId>
+        <artifactId>vavr</artifactId>
+        <version>${vavr.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jol</groupId>
+        <artifactId>jol-core</artifactId>
+        <version>${jol-core.version}</version>
+      </dependency>
+
+      <!--region Common Annotations (CheckerFramework, JetBrains, SpotBugs, ErrorProne) -->
+      <dependency>
+        <groupId>org.checkerframework</groupId>
+        <artifactId>checker</artifactId>
+        <version>${checker.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains</groupId>
+        <artifactId>annotations</artifactId>
+        <version>${annotations.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.jcip</groupId>
+        <artifactId>jcip-annotations</artifactId>
+        <version>${jcip-annotations.version}</version>
+        <optional>true</optional>
+      </dependency>
+      <dependency>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-annotations</artifactId>
+        <version>${spotbugs.version}</version>
+        <optional>true</optional>
+      </dependency>
+      <dependency>
+        <groupId>com.google.errorprone</groupId>
+        <artifactId>error_prone_annotations</artifactId>
+        <version>${error_prone_annotations.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!--endregion-->
+
+      <!--region test-->
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>${jmh-core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>${jmh-core.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>java-hamcrest</artifactId>
+        <version>${java-hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!--endregion-->
+
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <!--region Test dependencies - JUnit Jupiter, AssertJ, Hamcrest, Mockito -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>java-hamcrest</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+    <!--endregion-->
+
+  </dependencies>
+
+  <build>
+
+    <defaultGoal>verify exec:exec</defaultGoal>
+
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <parameters>true</parameters>
+            <compilerArgs>
+              <arg>--enable-preview</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+          <configuration>
+            <argLine>--enable-preview</argLine>
+            <includes>
+              <include>**/Test*.java</include>
+              <include>**/*Test.java</include>
+              <include>**/*Tests.java</include>
+              <include>**/*TestCase.java</include>
+            </includes>
+            <properties>
+              <!--<includeTags>fast</includeTags>-->
+              <excludeTags>slow</excludeTags>
+              <!--<configurationParameters>-->
+              <!--junit.jupiter.conditions.deactivate = *-->
+              <!--</configurationParameters>-->
+            </properties>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${maven-assembly-plugin.version}</version>
+          <configuration>
+            <descriptorRefs>
+              <descriptorRef>${maven-assembly-plugin.descriptorSuffix}</descriptorRef>
+            </descriptorRefs>
+            <archive>
+              <manifest>
+                <mainClass>${exec.mainClass}</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${maven-enforcer-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>enforce-maven</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>${minimal.maven.version}</version>
+                  </requireMavenVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>${maven-shade-plugin.version}</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+              <configuration>
+                <transformers>
+                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <mainClass>ru.otus.l012.Main</mainClass>
+                  </transformer>
+                </transformers>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>${versions-maven-plugin.version}</version>
+          <inherited>false</inherited>
+          <configuration>
+            <generateBackupPoms>false</generateBackupPoms>
+            <rulesUri>file://${basedir}/ruleset.xml</rulesUri>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec-maven-plugin.version}</version>
+          <configuration>
+            <arguments>
+              <argument>-jar</argument>
+              <argument>--enable-preview</argument>
+              <argument>target/${jar.name}-${maven-assembly-plugin.descriptorSuffix}.jar</argument>
+            </arguments>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+
+  </build>
+</project>
