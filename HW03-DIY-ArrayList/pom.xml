@@ -25,27 +25,36 @@
   </build>
 
   <parent>
-    <groupId>ru.otus</groupId>
     <artifactId>OtusJavaHW</artifactId>
+    <groupId>ru.otus</groupId>
     <!--suppress MavenPropertyInParent -->
     <version>${revision}</version>
   </parent>
 
-  <groupId>ru.otus</groupId>
-  <artifactId>HW01-maven</artifactId>
+  <artifactId>HW03-DIY-ArrayList</artifactId>
 
   <packaging>jar</packaging>
 
-  <properties>
-    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
-    <jar.name>${project.name}</jar.name>
-  </properties>
-
   <dependencies>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+
   </dependencies>
+
 
 </project>
