@@ -103,9 +103,6 @@
           <version>${maven-compiler-plugin.version}</version>
           <configuration>
             <parameters>true</parameters>
-            <compilerArgs>
-              <arg>--enable-preview</arg>
-            </compilerArgs>
           </configuration>
         </plugin>
         <plugin>
