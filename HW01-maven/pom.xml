@@ -3,6 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ru.otus</groupId>
+    <artifactId>OtusJavaHW</artifactId>
+    <!--suppress MavenPropertyInParent -->
+    <version>${revision}</version>
+  </parent>
+
+  <groupId>ru.otus</groupId>
+  <artifactId>HW01-maven</artifactId>
+
+  <packaging>jar</packaging>
+
+  <properties>
+    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
+    <jar.name>${project.name}</jar.name>
+    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
+  </properties>
+
   <build>
 
     <pluginManagement>
@@ -50,23 +69,6 @@
     </plugins>
 
   </build>
-
-  <parent>
-    <groupId>ru.otus</groupId>
-    <artifactId>OtusJavaHW</artifactId>
-    <!--suppress MavenPropertyInParent -->
-    <version>${revision}</version>
-  </parent>
-
-  <groupId>ru.otus</groupId>
-  <artifactId>HW01-maven</artifactId>
-
-  <packaging>jar</packaging>
-
-  <properties>
-    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
-    <jar.name>${project.name}</jar.name>
-  </properties>
 
   <dependencies>
     <dependency>

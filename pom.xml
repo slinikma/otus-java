@@ -27,7 +27,6 @@
   <properties>
 
     <!--region General-->
-    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
     <jar.name>${project.name}-${revision}</jar.name>
     <revision>2019-06-SNAPSHOT</revision>
     <java.version>12</java.version>
