@@ -86,29 +86,6 @@
             <parameters>true</parameters>
           </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>${maven-assembly-plugin.version}</version>
-          <configuration>
-            <descriptorRefs>
-              <descriptorRef>${maven-assembly-plugin.descriptorSuffix}</descriptorRef>
-            </descriptorRefs>
-            <archive>
-              <manifest>
-                <mainClass>${exec.mainClass}</mainClass>
-              </manifest>
-            </archive>
-          </configuration>
-          <executions>
-            <execution>
-              <id>make-assembly</id>
-              <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
 
       </plugins>
     </pluginManagement>
