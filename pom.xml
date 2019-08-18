@@ -44,9 +44,6 @@
     <com.google.guava.version>28.0-jre</com.google.guava.version>
     <!--endregion-->
 
-    <!--region Testing - JUnit, AssertJ, Mockito, Hacrest -->
-    <!--endregion-->
-
     <!--region Plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -60,9 +57,6 @@
   <dependencyManagement>
     <dependencies>
 
-      <!--region BOMs-->
-      <!--endregion-->
-
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
@@ -75,21 +69,8 @@
         </exclusions>
       </dependency>
 
-      <!--region Common Annotations (CheckerFramework, JetBrains, SpotBugs, ErrorProne) -->
-      <!--endregion-->
-
-      <!--region test-->
-      <!--endregion-->
-
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-
-    <!--region Test dependencies - JUnit Jupiter, AssertJ, Hamcrest, Mockito -->
-    <!--endregion-->
-
-  </dependencies>
 
   <build>
 
