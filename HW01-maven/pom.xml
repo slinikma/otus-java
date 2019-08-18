@@ -17,12 +17,14 @@
   <packaging>jar</packaging>
 
   <properties>
-    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
     <jar.name>${project.name}</jar.name>
     <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
+    <maven-assembly-plugin.descriptorSuffix>jar-with-dependencies</maven-assembly-plugin.descriptorSuffix>
   </properties>
 
   <build>
+
+    <finalName>${jar.name}</finalName>
 
     <pluginManagement>
       <plugins>

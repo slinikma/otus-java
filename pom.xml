@@ -27,7 +27,6 @@
   <properties>
 
     <!--region General-->
-    <jar.name>${project.name}-${revision}</jar.name>
     <revision>2019-06-SNAPSHOT</revision>
     <java.version>12</java.version>
     <minimal.maven.version>3.5.0</minimal.maven.version>
@@ -48,7 +47,6 @@
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
-    <maven-assembly-plugin.descriptorSuffix>jar-with-dependencies</maven-assembly-plugin.descriptorSuffix>
     <!--endregion-->
 
   </properties>
