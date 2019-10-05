@@ -28,8 +28,6 @@
   <properties>
 
     <!--region General-->
-    <exec.mainClass>ru.otus.hw01.HelloOtus</exec.mainClass>
-    <jar.name>${project.name}-${revision}</jar.name>
     <revision>2019-06-SNAPSHOT</revision>
     <java.version>12</java.version>
     <minimal.maven.version>3.5.0</minimal.maven.version>
@@ -49,29 +47,18 @@
     <junit-jupiter.version>5.3.2</junit-jupiter.version>
     <assertj.version>3.12.2</assertj.version>
     <!--endregion-->
-
+    
     <!--region Plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
-    <maven-assembly-plugin.descriptorSuffix>jar-with-dependencies</maven-assembly-plugin.descriptorSuffix>
     <!--endregion-->
 
   </properties>
 
   <dependencyManagement>
     <dependencies>
-
-      <!--region BOMs-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <!--endregion-->
 
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -112,13 +99,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-
-    <!--region Test dependencies - JUnit Jupiter, AssertJ, Hamcrest, Mockito -->
-    <!--endregion-->
-
-  </dependencies>
-
   <build>
 
     <defaultGoal>verify exec:exec</defaultGoal>
@@ -131,45 +111,12 @@
           <version>${maven-compiler-plugin.version}</version>
           <configuration>
             <parameters>true</parameters>
-            <compilerArgs>
-              <arg>--enable-preview</arg>
-            </compilerArgs>
           </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>${maven-assembly-plugin.version}</version>
-          <configuration>
-            <descriptorRefs>
-              <descriptorRef>${maven-assembly-plugin.descriptorSuffix}</descriptorRef>
-            </descriptorRefs>
-            <archive>
-              <manifest>
-                <mainClass>${exec.mainClass}</mainClass>
-              </manifest>
-            </archive>
-          </configuration>
-          <executions>
-            <execution>
-              <id>make-assembly</id>
-              <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
 
       </plugins>
     </pluginManagement>
 
-    <plugins>
-
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-      </plugin>
-
-    </plugins>
 
   </build>
 </project>
