@@ -21,7 +21,8 @@
     </developers>
 
     <modules>
-        <module>HW01-maven</module>
+      <module>HW01-maven</module>
+      <module>HW03-DIY-ArrayList</module>
     </modules>
 
   <properties>
@@ -42,6 +43,11 @@
     <com.google.guava.version>28.0-jre</com.google.guava.version>
     <!--endregion-->
 
+    <!--region Testing - JUnit, AssertJ, Mockito, Hacrest -->
+    <junit-jupiter.version>5.3.2</junit-jupiter.version>
+    <assertj.version>3.12.2</assertj.version>
+    <!--endregion-->
+    
     <!--region Plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -65,6 +71,30 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+      <!--region Common Annotations (CheckerFramework, JetBrains, SpotBugs, ErrorProne) -->
+      <!--endregion-->
+
+      <!--region test-->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!--endregion-->
 
     </dependencies>
   </dependencyManagement>
