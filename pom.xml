@@ -47,7 +47,7 @@
     <junit-jupiter.version>5.3.2</junit-jupiter.version>
     <assertj.version>3.12.2</assertj.version>
     <!--endregion-->
-    
+
     <!--region Plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -87,6 +87,12 @@
         <artifactId>junit-jupiter-params</artifactId>
         <version>${junit-jupiter.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>compile</scope>
       </dependency>
       <dependency>
         <groupId>org.assertj</groupId>
