@@ -41,13 +41,16 @@
 
     <!--region Libs -->
     <com.google.guava.version>28.0-jre</com.google.guava.version>
+    <org.projectlombok.version>1.18.10</org.projectlombok.version>
+    <com.h2database.version>1.4.199</com.h2database.version>
+    <hibernate-core.version>5.4.4.Final</hibernate-core.version>
     <!--endregion-->
 
     <!--region Testing - JUnit, AssertJ, Mockito, Hacrest -->
     <junit-jupiter.version>5.3.2</junit-jupiter.version>
     <assertj.version>3.12.2</assertj.version>
     <!--endregion-->
-    
+
     <!--region Plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -73,6 +76,16 @@
       </dependency>
 
       <!--region Common Annotations (CheckerFramework, JetBrains, SpotBugs, ErrorProne) -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${com.h2database.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate-core.version}</version>
+      </dependency>
       <!--endregion-->
 
       <!--region test-->
@@ -96,8 +109,22 @@
       </dependency>
       <!--endregion-->
 
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${org.projectlombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+  </dependencies>
 
   <build>
 
