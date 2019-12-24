@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.api.dao.UserDao;
 import ru.otus.hw17.api.model.User;
-import ru.otus.hw17.jdbc.dao.UserDaoJdbc;
 
 import java.util.Optional;
 
@@ -19,15 +18,12 @@ public class DbServiceUserImpl implements DBServiceUser {
   }
 
   @Override
-  public long saveUser(User user) {
+  public void saveUser(User user) {
     try (SessionManager sessionManager = userDao.getSessionManager()) {
       sessionManager.beginSession();
       try {
-        long userId = userDao.saveUser(user);
+        userDao.saveUser(user);
         sessionManager.commitSession();
-
-        logger.info("created user: {}", userId);
-        return userId;
       } catch (Exception e) {
         logger.error(e.getMessage(), e);
         sessionManager.rollbackSession();

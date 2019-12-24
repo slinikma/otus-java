@@ -12,7 +12,7 @@ import java.util.List;
 public class InsertQueryBuilder implements Visitor {
   private StringBuilder query;
   private List<String> params;
-  private boolean isTableAppended;
+  private boolean isTableAppended = false;
   private boolean isCommaNeeded = false;
 
   public InsertQueryBuilder() {
@@ -22,7 +22,7 @@ public class InsertQueryBuilder implements Visitor {
   }
 
   @Override
-  public void visit(ArrayField field) throws ClassNotFoundException, NoSuchMethodException {
+  public void visit(ArrayField field) {
     if (!this.isTableAppended) {
       query.append(field.getFieldOfObject().getClass().getSimpleName())
           .append("(");
@@ -39,7 +39,7 @@ public class InsertQueryBuilder implements Visitor {
   }
 
   @Override
-  public void visit(PrimitiveField field) throws NoSuchMethodException {
+  public void visit(PrimitiveField field) {
     if (!this.isTableAppended) {
       query.append(field.getFieldOfObject().getClass().getSimpleName())
           .append("(");
@@ -60,9 +60,7 @@ public class InsertQueryBuilder implements Visitor {
   public void visit(ObjectField field) {
     // Сложное не примитивное поле, которое должно быть ссылкой на другую таблицу.
     // Выходит за рамки ДЗ
-    if (this.isTableAppended) {
-        throw new UnsupportedOperationException("Object fields unsupported!");
-    }
+    throw new UnsupportedOperationException("Object fields unsupported!");
   }
 
   @Override

@@ -45,17 +45,17 @@ public class DbExecutor<T> {
 
   // TODO: почему в задании <T> generic метод + generic класс?
   // Использую generic тип класса
-  public T load(long id, Class<T> clazz) {
+  public Optional<T> load(long id, Class<T> clazz) {
     try {
       String query = TraverserImpl.getSelectQuery(clazz);
-      // TODO: почитать, подумать! доделай, это же прикольно, а проверка кода - это то, за что ты заплатил! втянешься!!!
 //      T obj = clazz.getConstructor(T);
       // В параметры мы передаём классы, конструкторы которых тоже должны быть вызваны?
-      selectRecord(query, id, resultSet -> {
+      return selectRecord(query, id, resultSet -> {
         try {
           if (resultSet.next()) {
             Constructor<T> constructor = clazz.getConstructor();
             T object = TraverserImpl.loadObjectFromResultSet(resultSet, constructor.newInstance());
+            logger.info("Loaded object: " + object.toString());
             return object;
           }
         } catch (SQLException | NoSuchMethodException e) {

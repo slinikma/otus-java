@@ -26,7 +26,7 @@ public class UserDaoJdbc implements UserDao {
   public Optional<User> getUser(long id) {
     try {
       dbExecutor.setConnection(getConnection());
-      return Optional.ofNullable(dbExecutor.load(id, User.class));
+      return dbExecutor.load(id, User.class);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -34,14 +34,13 @@ public class UserDaoJdbc implements UserDao {
   }
 
   @Override
-  public long saveUser(User user) {
+  public void saveUser(User user) {
     try {
       // TODO: !!! вызываем visitor с сервисом получаения SQL запроса
       // TODO: переписываю executor с методами CRUCL и тут вызываю эти методы. рефлексию вызываю уже там и строю запросы. Id нужен не для вставки (там он игнорится просто, т.к. автоинкремент), а для селекта\апдейта
       // TODO: нужно ли рассмотреть случаи вставки без автоинкремента?
       dbExecutor.setConnection(getConnection());
       dbExecutor.create(user);
-      return -1;
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new UserDaoException(e);
