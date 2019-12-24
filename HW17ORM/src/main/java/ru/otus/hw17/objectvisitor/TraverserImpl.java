@@ -61,11 +61,14 @@ public class TraverserImpl {
 
   private static void traverse(Object object, Visitor service, Field rootField) throws IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
     // Обрабатываем сам объект и его поле, если указали
-    if (object.getClass().isArray()) {
-      new ArrayField(rootField, object).accept(service);
-    } else {
-      new ObjectField(rootField, object).accept(service);
+    if (rootField != null) {
+      if (object.getClass().isArray()) {
+        new ArrayField(rootField, object).accept(service);
+      } else {
+        new ObjectField(rootField, object).accept(service);
+      }
     }
+
     // Обрабатываем поля объекта
     Field[] fields = object.getClass().getDeclaredFields();
     for (Field field : fields) {

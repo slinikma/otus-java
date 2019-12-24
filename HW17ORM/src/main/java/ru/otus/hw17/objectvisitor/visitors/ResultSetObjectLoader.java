@@ -6,7 +6,6 @@ import ru.otus.hw17.objectvisitor.visitable.types.ObjectField;
 import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
 import ru.otus.hw17.objectvisitor.visitable.types.StringField;
 
-import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -19,27 +18,45 @@ public class ResultSetObjectLoader implements Visitor {
   }
 
   @Override
-  public void visit(ArrayField field) throws ClassNotFoundException, NoSuchMethodException {
+  public void visit(ArrayField field) {
     try {
       Object fieldValue = resultSet.getArray(field.getName());
-      // TODO: ну и жесть, переделать
-      Field fullControlledField = field.getFieldOfObject().getClass().getField(field.getName());
-      fullControlledField.setAccessible(true);
-      fullControlledField.set(field.getFieldOfObject(), fieldValue);
-    } catch (SQLException | NoSuchFieldException | IllegalAccessException e) {
+      field.getField().setAccessible(true);
+      field.getField().set(field.getFieldOfObject(), fieldValue);
+    } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void visit(PrimitiveField field) throws NoSuchMethodException {
+  public void visit(PrimitiveField field) {
     try {
-      Object fieldValue = resultSet.getArray(field.getName());
-      // TODO: ну и жесть, переделать
-      Field fullControlledField = field.getFieldOfObject().getClass().getField(field.getName());
-      fullControlledField.setAccessible(true);
-      fullControlledField.set(field.getFieldOfObject(), fieldValue);
-    } catch (SQLException | NoSuchFieldException | IllegalAccessException e) {
+      field.getField().setAccessible(true);
+
+      // TODO: можно как-то проще сделать???
+      if (field.getBoxedPrimitive().getClass() == Boolean.class) {
+        boolean fieldValue = resultSet.getBoolean(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      } else if (field.getBoxedPrimitive().getClass() == Byte.class) {
+        byte fieldValue = resultSet.getByte(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      } else if (field.getBoxedPrimitive().getClass() == Short.class) {
+        short fieldValue = resultSet.getShort(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      } else if (field.getBoxedPrimitive().getClass() == Integer.class) {
+        int fieldValue = resultSet.getInt(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      } else if (field.getBoxedPrimitive().getClass() == Long.class) {
+        long fieldValue = resultSet.getLong(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      } else if (field.getBoxedPrimitive().getClass() == Float.class) {
+        float fieldValue = resultSet.getFloat(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      } else if (field.getBoxedPrimitive().getClass() == Double.class) {
+        double fieldValue = resultSet.getDouble(field.getName());
+        field.getField().set(field.getFieldOfObject(), fieldValue);
+      }
+    } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }
   }
@@ -54,12 +71,10 @@ public class ResultSetObjectLoader implements Visitor {
   @Override
   public void visit(StringField field) {
     try {
-      Object fieldValue = resultSet.getArray(field.getName());
-      // TODO: ну и жесть, переделать
-      Field fullControlledField = field.getFieldOfObject().getClass().getField(field.getName());
-      fullControlledField.setAccessible(true);
-      fullControlledField.set(field.getFieldOfObject(), fieldValue);
-    } catch (SQLException | NoSuchFieldException | IllegalAccessException e) {
+      String stringFieldValue = resultSet.getString(field.getName());
+      field.getField().setAccessible(true);
+      field.getField().set(field.getFieldOfObject(), stringFieldValue);
+    } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }
   }

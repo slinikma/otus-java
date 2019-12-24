@@ -4,36 +4,48 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw17.api.dao.AccountDao;
+import ru.otus.hw17.api.dao.UserDaoException;
 import ru.otus.hw17.api.model.Account;
-import ru.otus.hw17.api.model.User;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.jdbc.DbExecutor;
 import ru.otus.hw17.jdbc.sessionmanager.SessionManagerJdbc;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @AllArgsConstructor
 public class AccountDaoJdbc implements AccountDao {
-  private static Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
+  private static Logger logger = LoggerFactory.getLogger(AccountDaoJdbc.class);
 
   private final SessionManagerJdbc sessionManager;
   private final DbExecutor<Account> dbExecutor;
 
+
   @Override
-  public Optional<User> findById(long id) {
+  public Optional<Account> getAccount(long id) {
+    try {
+      dbExecutor.setConnection(getConnection());
+      return dbExecutor.load(id, Account.class);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+    }
     return Optional.empty();
   }
 
   @Override
-  public long saveUser(User user) {
-    return 0;
+  public void saveAccount(Account account) {
+    try {
+      dbExecutor.setConnection(getConnection());
+      dbExecutor.create(account);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new UserDaoException(e);
+    }
   }
 
   @Override
   public SessionManager getSessionManager() {
-    return null;
+    return sessionManager;
   }
 
   private Connection getConnection() {

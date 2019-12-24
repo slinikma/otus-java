@@ -18,6 +18,11 @@ public abstract class TraversedField implements TraversedType {
     return field.getAnnotations();
   }
 
+//  public void setAccessible(boolean flag) {
+//    field.setAccessible(flag);
+//  }
+//
+
   public boolean isAnnotationPresent(Class<? extends Annotation> annotation) {
     return field.isAnnotationPresent(annotation);
   }
