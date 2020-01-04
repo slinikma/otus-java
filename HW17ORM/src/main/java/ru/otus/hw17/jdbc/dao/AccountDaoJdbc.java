@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw17.api.dao.AccountDao;
 import ru.otus.hw17.api.dao.UserDaoException;
-import ru.otus.hw17.api.model.Account;
+import ru.otus.hw17.api.model.myorm.Account;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.jdbc.DbExecutor;
 import ru.otus.hw17.jdbc.sessionmanager.SessionManagerJdbc;
@@ -33,10 +33,21 @@ public class AccountDaoJdbc implements AccountDao {
   }
 
   @Override
-  public void saveAccount(Account account) {
+  public long saveAccount(Account account) {
     try {
       dbExecutor.setConnection(getConnection());
-      dbExecutor.create(account);
+      return dbExecutor.create(account);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new UserDaoException(e);
+    }
+  }
+
+  @Override
+  public void updateAccount(Account account) {
+    try {
+      dbExecutor.setConnection(getConnection());
+      dbExecutor.update(account);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new UserDaoException(e);

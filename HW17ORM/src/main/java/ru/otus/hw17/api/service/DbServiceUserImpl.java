@@ -2,9 +2,9 @@ package ru.otus.hw17.api.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.hw17.api.model.User;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.api.dao.UserDao;
-import ru.otus.hw17.api.model.User;
 
 import java.util.Optional;
 
@@ -18,11 +18,27 @@ public class DbServiceUserImpl implements DBServiceUser {
   }
 
   @Override
-  public void saveUser(User user) {
+  public long saveUser(User user) {
     try (SessionManager sessionManager = userDao.getSessionManager()) {
       sessionManager.beginSession();
       try {
-        userDao.saveUser(user);
+        long id = userDao.saveUser(user);
+        sessionManager.commitSession();
+        return id;
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+        sessionManager.rollbackSession();
+        throw new DbServiceException(e);
+      }
+    }
+  }
+
+  @Override
+  public void updateUser(User user) {
+    try (SessionManager sessionManager = userDao.getSessionManager()) {
+      sessionManager.beginSession();
+      try {
+        userDao.updateUser(user);
         sessionManager.commitSession();
       } catch (Exception e) {
         logger.error(e.getMessage(), e);

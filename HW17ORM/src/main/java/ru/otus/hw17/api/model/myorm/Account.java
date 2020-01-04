@@ -1,10 +1,14 @@
-package ru.otus.hw17.api.model;
+package ru.otus.hw17.api.model.myorm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import ru.otus.hw17.annotations.Id;
+
+/*
+ * My ORM model
+ * */
 
 @AllArgsConstructor
 @NoArgsConstructor

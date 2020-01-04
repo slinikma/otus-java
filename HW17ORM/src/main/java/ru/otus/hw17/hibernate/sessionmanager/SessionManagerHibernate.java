@@ -3,7 +3,6 @@ package ru.otus.hw17.hibernate.sessionmanager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import ru.otus.hw17.api.sessionmanager.DatabaseSession;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.api.sessionmanager.SessionManagerException;
 

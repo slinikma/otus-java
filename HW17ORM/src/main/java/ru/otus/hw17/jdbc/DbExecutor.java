@@ -4,15 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.hw17.api.model.User;
 import ru.otus.hw17.objectvisitor.TraverserImpl;
 
-import java.io.ObjectStreamException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -22,10 +18,10 @@ public class DbExecutor<T> {
   @Getter @Setter
   private Connection connection;
 
-  public void create(T objectData) {
+  public long create(T objectData) {
     try {
       String query = TraverserImpl.getInsertQuery(objectData);
-      insertRecord(query);
+      return insertRecord(query);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
     } catch (NoSuchMethodException e) {
@@ -36,16 +32,33 @@ public class DbExecutor<T> {
       e.printStackTrace();
     }
 
-
+    return -1;
   }
 
-  public void update(T objectData) {
+  public long update(T objectData) {
+    try {
+      String query = TraverserImpl.getUpdateQuery(objectData);
+      return insertRecord(query);
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    } catch (InstantiationException e) {
+      e.printStackTrace();
+    }
 
+    return -1;
   }
 
   // TODO: почему в задании <T> generic метод + generic класс?
   // Использую generic тип класса
-  public Optional<T> load(long id, Class<T> clazz) {
+  public Optional<T> load(long id, Class<? extends T> clazz) {
     try {
       String query = TraverserImpl.getSelectQuery(clazz);
 //      T obj = clazz.getConstructor(T);
@@ -53,7 +66,7 @@ public class DbExecutor<T> {
       return selectRecord(query, id, resultSet -> {
         try {
           if (resultSet.next()) {
-            Constructor<T> constructor = clazz.getConstructor();
+            Constructor<? extends T> constructor = clazz.getConstructor();
             T object = TraverserImpl.loadObjectFromResultSet(resultSet, constructor.newInstance());
             logger.info("Loaded object: " + object.toString());
             return object;
@@ -97,20 +110,10 @@ public class DbExecutor<T> {
 
   private long insertRecord(String sql) throws SQLException {
     Savepoint savePoint = this.connection.setSavepoint("savePointName");
-//    sql = "INSERT INTO User(name, alias) VALUES ('DBSERVICEUSERRR', 'DBSERVICEUSERRR')";
-    System.out.println(sql);
     try (Statement statement = this.connection.createStatement()) {
-//      pst.setLong(1, 2);
-//      pst.setString(1, "DBSERVICEUSERRR");
-//      pst.setString(2, "DBSERVICEUSERRR2");
-//      for (int idx = 0; idx < params.size(); idx++) {
-//        pst.setString(idx + 1, params.get(idx));
-//      }
       statement.executeUpdate(sql);
-//      try (ResultSet rs = statement.getGeneratedKeys()) {
-//        rs.next();
-//        return rs.getInt(1);
-//      }
+      // Выходит за рамки задания.
+      // Нужно из визитора возвращать id
       return 1;
     } catch (SQLException ex) {
       this.connection.rollback(savePoint);
