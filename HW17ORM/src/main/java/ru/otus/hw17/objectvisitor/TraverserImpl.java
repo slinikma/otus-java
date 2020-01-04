@@ -1,7 +1,7 @@
 package ru.otus.hw17.objectvisitor;
 
-import ru.otus.hw17.api.model.Account;
-import ru.otus.hw17.api.model.User;
+import ru.otus.hw17.api.model.myorm.Account;
+import ru.otus.hw17.api.model.myorm.User;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
 import ru.otus.hw17.objectvisitor.visitable.types.ObjectField;
 import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
@@ -9,6 +9,7 @@ import ru.otus.hw17.objectvisitor.visitable.types.StringField;
 import ru.otus.hw17.objectvisitor.visitors.InsertQueryBuilder;
 import ru.otus.hw17.objectvisitor.visitors.SelectByIdQueryBuilder;
 import ru.otus.hw17.objectvisitor.visitors.ResultSetObjectLoader;
+import ru.otus.hw17.objectvisitor.visitors.UpdateQueryBuilder;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +26,9 @@ public class TraverserImpl {
 
       System.out.println(TraverserImpl.getSelectQuery(User.class));
       System.out.println(TraverserImpl.getSelectQuery(Account.class));
+
+      System.out.println(TraverserImpl.getUpdateQuery(new User(1, "Nikita")));
+      System.out.println(TraverserImpl.getUpdateQuery(new Account(1, "myAdminAcc", 123123)));
     } catch (IllegalAccessException e) {
       e.printStackTrace();
     } catch (NoSuchMethodException e) {
@@ -57,6 +61,13 @@ public class TraverserImpl {
     traverse(clazz.getDeclaredConstructor().newInstance(), selectByIdQueryBuilderService, null);
 
     return selectByIdQueryBuilderService.getQuery();
+  }
+
+  public static <T> String getUpdateQuery(Object object) throws IllegalAccessException, InstantiationException, NoSuchMethodException, ClassNotFoundException, InvocationTargetException {
+    var updateQueryBuilderService = new UpdateQueryBuilder();
+    traverse(object, updateQueryBuilderService, null);
+
+    return updateQueryBuilderService.getQuery();
   }
 
   private static void traverse(Object object, Visitor service, Field rootField) throws IllegalAccessException, ClassNotFoundException, NoSuchMethodException {

@@ -3,7 +3,7 @@ package ru.otus.hw17.api.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw17.api.dao.AccountDao;
-import ru.otus.hw17.api.model.Account;
+import ru.otus.hw17.api.model.myorm.Account;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 
 import java.util.Optional;
@@ -18,11 +18,27 @@ public class DBServiceAccountImpl implements DBServiceAccount {
   }
 
   @Override
-  public void saveAccount(Account account) {
+  public long saveAccount(Account account) {
     try (SessionManager sessionManager = accountDao.getSessionManager()) {
       sessionManager.beginSession();
       try {
-        accountDao.saveAccount(account);
+        long id = accountDao.saveAccount(account);
+        sessionManager.commitSession();
+        return id;
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+        sessionManager.rollbackSession();
+        throw new DbServiceException(e);
+      }
+    }
+  }
+
+  @Override
+  public void updateAccount(Account account) {
+    try (SessionManager sessionManager = accountDao.getSessionManager()) {
+      sessionManager.beginSession();
+      try {
+        accountDao.updateAccount(account);
         sessionManager.commitSession();
       } catch (Exception e) {
         logger.error(e.getMessage(), e);

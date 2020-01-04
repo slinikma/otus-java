@@ -11,8 +11,6 @@ import ru.otus.hw17.jdbc.DbExecutor;
 import ru.otus.hw17.jdbc.sessionmanager.SessionManagerJdbc;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -26,7 +24,7 @@ public class UserDaoJdbc implements UserDao {
   public Optional<User> getUser(long id) {
     try {
       dbExecutor.setConnection(getConnection());
-      return dbExecutor.load(id, User.class);
+      return dbExecutor.load(id, ru.otus.hw17.api.model.myorm.User.class);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -34,13 +32,24 @@ public class UserDaoJdbc implements UserDao {
   }
 
   @Override
-  public void saveUser(User user) {
+  public long saveUser(User user) {
     try {
-      // TODO: !!! вызываем visitor с сервисом получаения SQL запроса
+      // TODO: вызываем visitor с сервисом получаения SQL запроса
       // TODO: переписываю executor с методами CRUCL и тут вызываю эти методы. рефлексию вызываю уже там и строю запросы. Id нужен не для вставки (там он игнорится просто, т.к. автоинкремент), а для селекта\апдейта
       // TODO: нужно ли рассмотреть случаи вставки без автоинкремента?
       dbExecutor.setConnection(getConnection());
-      dbExecutor.create(user);
+      return dbExecutor.create(user);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new UserDaoException(e);
+    }
+  }
+
+  @Override
+  public void updateUser(User user) {
+    try {
+      dbExecutor.setConnection(getConnection());
+      dbExecutor.update(user);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new UserDaoException(e);
