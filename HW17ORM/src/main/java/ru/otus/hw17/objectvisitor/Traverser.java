@@ -1,7 +1,5 @@
 package ru.otus.hw17.objectvisitor;
 
-import ru.otus.hw17.api.model.myorm.Account;
-import ru.otus.hw17.api.model.myorm.User;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
 import ru.otus.hw17.objectvisitor.visitable.types.ObjectField;
 import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
@@ -16,31 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.sql.ResultSet;
 
-public class TraverserImpl {
-
-  public static void main(String[] args) {
-    try {
-      // TODO: tests???
-      System.out.println(TraverserImpl.getInsertQuery(new User(1, "Nikita")));
-      System.out.println(TraverserImpl.getInsertQuery(new Account(1, "myAdminAcc", 123123)));
-
-      System.out.println(TraverserImpl.getSelectQuery(User.class));
-      System.out.println(TraverserImpl.getSelectQuery(Account.class));
-
-      System.out.println(TraverserImpl.getUpdateQuery(new User(1, "Nikita")));
-      System.out.println(TraverserImpl.getUpdateQuery(new Account(1, "myAdminAcc", 123123)));
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    }
-  }
+public class Traverser {
 
   public static <T> T loadObjectFromResultSet(ResultSet resultSet, T object) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
     var resultSetObjectLoader = new ResultSetObjectLoader(resultSet);
