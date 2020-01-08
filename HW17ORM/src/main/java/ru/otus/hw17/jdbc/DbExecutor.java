@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.hw17.objectvisitor.TraverserImpl;
+import ru.otus.hw17.objectvisitor.Traverser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +20,7 @@ public class DbExecutor<T> {
 
   public long create(T objectData) {
     try {
-      String query = TraverserImpl.getInsertQuery(objectData);
+      String query = Traverser.getInsertQuery(objectData);
       return insertRecord(query);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
@@ -37,7 +37,7 @@ public class DbExecutor<T> {
 
   public long update(T objectData) {
     try {
-      String query = TraverserImpl.getUpdateQuery(objectData);
+      String query = Traverser.getUpdateQuery(objectData);
       return insertRecord(query);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
@@ -60,14 +60,14 @@ public class DbExecutor<T> {
   // Использую generic тип класса
   public Optional<T> load(long id, Class<? extends T> clazz) {
     try {
-      String query = TraverserImpl.getSelectQuery(clazz);
+      String query = Traverser.getSelectQuery(clazz);
 //      T obj = clazz.getConstructor(T);
       // В параметры мы передаём классы, конструкторы которых тоже должны быть вызваны?
       return selectRecord(query, id, resultSet -> {
         try {
           if (resultSet.next()) {
             Constructor<? extends T> constructor = clazz.getConstructor();
-            T object = TraverserImpl.loadObjectFromResultSet(resultSet, constructor.newInstance());
+            T object = Traverser.loadObjectFromResultSet(resultSet, constructor.newInstance());
             logger.info("Loaded object: " + object.toString());
             return object;
           }
