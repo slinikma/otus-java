@@ -53,16 +53,4 @@
       <artifactId>gson</artifactId>
     </dependency>
   </dependencies>
-
-<!--  <build>-->
-<!--    <finalName>${jar.name}</finalName>-->
-
-<!--    <defaultGoal>verify exec:exec</defaultGoal>-->
-
-<!--    <plugins>-->
-<!--      <plugin>-->
-<!--        <artifactId>maven-assembly-plugin</artifactId>-->
-<!--      </plugin>-->
-<!--    </plugins>-->
-<!--  </build>-->
 </project>
