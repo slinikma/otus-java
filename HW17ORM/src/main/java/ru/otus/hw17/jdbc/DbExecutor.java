@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.hw17.objectvisitor.ObjectTraverseException;
 import ru.otus.hw17.objectvisitor.Traverser;
 
 import java.lang.reflect.Constructor;
@@ -18,18 +19,15 @@ public class DbExecutor<T> {
   @Getter @Setter
   private Connection connection;
 
-  public long create(T objectData) {
+  public long create(T objectData) throws ObjectTraverseException {
     try {
-      String query = Traverser.getInsertQuery(objectData);
+      PreparedStatement preparedStatement = Traverser.getInsertPreparedStatement(objectData);
       return insertRecord(query);
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
     } catch (SQLException e) {
       e.printStackTrace();
+    } catch (Exception e) {
+      // TODO: почитать, как кидать исключение правильно
+      throw new ObjectTraverseException(e);
     }
 
     return -1;
@@ -37,7 +35,7 @@ public class DbExecutor<T> {
 
   public long update(T objectData) {
     try {
-      String query = Traverser.getUpdateQuery(objectData);
+      PreparedStatement preparedStatement = Traverser.getUpdatePreparedStatement(objectData);
       return insertRecord(query);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
@@ -60,7 +58,7 @@ public class DbExecutor<T> {
   // Использую generic тип класса
   public Optional<T> load(long id, Class<? extends T> clazz) {
     try {
-      String query = Traverser.getSelectQuery(clazz);
+      PreparedStatement preparedStatement = Traverser.getSelectPreparedStatement(clazz);
 //      T obj = clazz.getConstructor(T);
       // В параметры мы передаём классы, конструкторы которых тоже должны быть вызваны?
       return selectRecord(query, id, resultSet -> {
@@ -110,8 +108,9 @@ public class DbExecutor<T> {
 
   private long insertRecord(String sql) throws SQLException {
     Savepoint savePoint = this.connection.setSavepoint("savePointName");
-    try (Statement statement = this.connection.createStatement()) {
-      statement.executeUpdate(sql);
+    try (Statement statement = this.connection.prepareStatement(sql)) {
+      statement.exe
+//      statement.executeUpdate();
       // Выходит за рамки задания.
       // Нужно из визитора возвращать id
       return 1;

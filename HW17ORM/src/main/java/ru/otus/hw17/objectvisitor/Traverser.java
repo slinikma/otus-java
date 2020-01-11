@@ -12,6 +12,7 @@ import ru.otus.hw17.objectvisitor.visitors.UpdateQueryBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Traverser {
@@ -23,28 +24,7 @@ public class Traverser {
     return object;
   }
 
-  public static String getInsertQuery(Object object) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
-    var insertQueryBuilderService = new InsertQueryBuilder();
-    traverse(object, insertQueryBuilderService, null);
-
-    return insertQueryBuilderService.getQuery();
-  }
-
-  public static <T> String getSelectQuery(Class<T> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, ClassNotFoundException, InvocationTargetException {
-    var selectByIdQueryBuilderService = new SelectByIdQueryBuilder();
-    traverse(clazz.getDeclaredConstructor().newInstance(), selectByIdQueryBuilderService, null);
-
-    return selectByIdQueryBuilderService.getQuery();
-  }
-
-  public static <T> String getUpdateQuery(Object object) throws IllegalAccessException, InstantiationException, NoSuchMethodException, ClassNotFoundException, InvocationTargetException {
-    var updateQueryBuilderService = new UpdateQueryBuilder();
-    traverse(object, updateQueryBuilderService, null);
-
-    return updateQueryBuilderService.getQuery();
-  }
-
-  private static void traverse(Object object, Visitor service, Field rootField) throws IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
+  public static void traverse(Object object, Visitor service, Field rootField) throws IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
     // Обрабатываем сам объект и его поле, если указали
     if (rootField != null) {
       if (object.getClass().isArray()) {
