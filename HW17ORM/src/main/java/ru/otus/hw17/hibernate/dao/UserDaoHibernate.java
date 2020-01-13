@@ -23,7 +23,7 @@ public class UserDaoHibernate implements UserDao {
   public Optional<User> getUser(long id) {
     DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
     try {
-      return Optional.ofNullable(currentSession.getSession().find(ru.otus.hw17.api.model.hibernate.User.class, id));
+      return Optional.ofNullable(currentSession.getSession().find(User.class, id));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -37,14 +37,14 @@ public class UserDaoHibernate implements UserDao {
       Session hibernateSession = currentSession.getSession();
       // Если ID у User задан, тогда пользователь уже отсоединён от контекста и находится в состоянии detached
       // Следовательно, мы делаем merge
-      if (((ru.otus.hw17.api.model.hibernate.User) user).getId() > 0) {
+      if (((User) user).getId() > 0) {
         hibernateSession.merge(user);
         // Иначе, пользователь ещё не в базе, т.е. ещё не был присоединён к сессии и находится в состояние transient
         // Следовательно делаем persist
       } else {
         hibernateSession.persist(user);
       }
-      return ((ru.otus.hw17.api.model.hibernate.User) user).getId();
+      return ((User) user).getId();
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new UserDaoException(e);

@@ -9,8 +9,12 @@ import ru.otus.hw17.api.model.User;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.jdbc.DbExecutor;
 import ru.otus.hw17.jdbc.sessionmanager.SessionManagerJdbc;
+import ru.otus.hw17.objectvisitor.ObjectTraverseException;
+import ru.otus.hw17.objectvisitor.Traverser;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -24,7 +28,23 @@ public class UserDaoJdbc implements UserDao {
   public Optional<User> getUser(long id) {
     try {
       dbExecutor.setConnection(getConnection());
-      return dbExecutor.load(id, ru.otus.hw17.api.model.myorm.User.class);
+      return dbExecutor.load(id, User.class, resultSet -> {
+        try {
+          if (resultSet.next()) {
+            // Можно сделать проще через new и передачу значений из resultSet через параметры, но я эксперементировал с рефлексией и визитором (:
+            return Traverser.loadObjectFromResultSet(resultSet, User.class.getConstructor().newInstance());
+          }
+        } catch (SQLException | NoSuchMethodException | ObjectTraverseException e) {
+          logger.error(e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+        return null;
+      });
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -34,9 +54,6 @@ public class UserDaoJdbc implements UserDao {
   @Override
   public long saveUser(User user) {
     try {
-      // TODO: вызываем visitor с сервисом получаения SQL запроса
-      // TODO: переписываю executor с методами CRUCL и тут вызываю эти методы. рефлексию вызываю уже там и строю запросы. Id нужен не для вставки (там он игнорится просто, т.к. автоинкремент), а для селекта\апдейта
-      // TODO: нужно ли рассмотреть случаи вставки без автоинкремента?
       dbExecutor.setConnection(getConnection());
       return dbExecutor.create(user);
     } catch (Exception e) {

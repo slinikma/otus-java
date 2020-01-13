@@ -44,45 +44,45 @@ public class UserDbJdbcServiceTest {
   @Test
   @DisplayName("> Добавлять нового пользователя из объекта класса User ...")
   void shouldCreateUser() {
-    User expectedUser1 = new ru.otus.hw17.api.model.myorm.User(0, "Вася");
-    User expectedUser2 = new ru.otus.hw17.api.model.myorm.User(1, "Никита");
-    User expectedUser3 = new ru.otus.hw17.api.model.myorm.User(2, "Петя");
+    User expectedUser1 = new User("Вася");
+    User expectedUser2 = new User("Никита");
+    User expectedUser3 = new User("Петя");
 
-    dbServiceUser.saveUser(expectedUser1);
-    dbServiceUser.saveUser(expectedUser2);
-    dbServiceUser.saveUser(expectedUser3);
+    long userId1 = dbServiceUser.saveUser(expectedUser1);
+    long userId2 = dbServiceUser.saveUser(expectedUser2);
+    long userId3 = dbServiceUser.saveUser(expectedUser3);
 
-    Optional<User> actualUser1 = dbServiceUser.getUser(0);
-    Optional<User> actualUser2 = dbServiceUser.getUser(1);
-    Optional<User> actualUser3 = dbServiceUser.getUser(2);
+    Optional<User> actualUser1 = dbServiceUser.getUser(userId1);
+    Optional<User> actualUser2 = dbServiceUser.getUser(userId2);
+    Optional<User> actualUser3 = dbServiceUser.getUser(userId3);
 
-    assertThat(actualUser1).isNotEmpty().get().hasFieldOrPropertyWithValue("name", ((ru.otus.hw17.api.model.myorm.User)expectedUser1).getName());
-    assertThat(actualUser2).isNotEmpty().get().hasFieldOrPropertyWithValue("name", ((ru.otus.hw17.api.model.myorm.User)expectedUser2).getName());
-    assertThat(actualUser3).isNotEmpty().get().hasFieldOrPropertyWithValue("name", ((ru.otus.hw17.api.model.myorm.User)expectedUser3).getName());
+    assertThat(actualUser1).isNotEmpty().get().hasFieldOrPropertyWithValue("name", expectedUser1.getName());
+    assertThat(actualUser2).isNotEmpty().get().hasFieldOrPropertyWithValue("name", expectedUser2.getName());
+    assertThat(actualUser3).isNotEmpty().get().hasFieldOrPropertyWithValue("name", expectedUser3.getName());
   }
 
   @Test
   @DisplayName("> Обновлять информацию о существующем пользователе из объекта класса User ...")
   void shouldUpdateUser() {
-    User user1 = new ru.otus.hw17.api.model.myorm.User(0, "Вася");
-    User user2 = new ru.otus.hw17.api.model.myorm.User(1, "Никита");
-    User user3 = new ru.otus.hw17.api.model.myorm.User(2, "Петя");
+    User user1 = new User(0, "Вася");
+    User user2 = new User(1, "Никита");
+    User user3 = new User(2, "Петя");
 
-    dbServiceUser.saveUser(user1);
-    dbServiceUser.saveUser(user2);
-    dbServiceUser.saveUser(user3);
+    long userId1 = dbServiceUser.saveUser(user1);
+    long userId2 = dbServiceUser.saveUser(user2);
+    long userId3 = dbServiceUser.saveUser(user3);
 
-    User updatedUser1 = new ru.otus.hw17.api.model.myorm.User(0, "Не Вася");
-    User updatedUser2 = new ru.otus.hw17.api.model.myorm.User(1, "Не Никита");
-    User updatedUser3 = new ru.otus.hw17.api.model.myorm.User(2, "Не Петя");
+    User updatedUser1 = new User(userId1, "Не Вася");
+    User updatedUser2 = new User(userId2, "Не Никита");
+    User updatedUser3 = new User(userId3, "Не Петя");
 
     dbServiceUser.updateUser(updatedUser1);
     dbServiceUser.updateUser(updatedUser2);
     dbServiceUser.updateUser(updatedUser3);
 
-    Optional<User> actualUser1 = dbServiceUser.getUser(0);
-    Optional<User> actualUser2 = dbServiceUser.getUser(1);
-    Optional<User> actualUser3 = dbServiceUser.getUser(2);
+    Optional<User> actualUser1 = dbServiceUser.getUser(userId1);
+    Optional<User> actualUser2 = dbServiceUser.getUser(userId2);
+    Optional<User> actualUser3 = dbServiceUser.getUser(userId3);
 
     assertThat(actualUser1).isNotEmpty().get().hasFieldOrPropertyWithValue("name", "Не Вася");
     assertThat(actualUser2).isNotEmpty().get().hasFieldOrPropertyWithValue("name", "Не Никита");

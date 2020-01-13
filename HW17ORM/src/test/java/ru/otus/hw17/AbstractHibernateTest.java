@@ -24,7 +24,7 @@ public class AbstractHibernateTest {
   @BeforeEach
   public void setUp() {
     sessionFactory = HibernateUtils.buildSessionFactory(HIBERNATE_CFG_XML_FILE_RESOURCE,
-        ru.otus.hw17.api.model.hibernate.User.class,
+        User.class,
         PhoneDataSet.class,
         AddressDataSet.class);
   }
@@ -34,7 +34,7 @@ public class AbstractHibernateTest {
 //    PhoneDataSet phoneNumber1 = new PhoneDataSet();
 //    PhoneDataSet phoneNumber2 = new PhoneDataSet();
 //    0, TEST_USER_NAME
-    return new ru.otus.hw17.api.model.hibernate.User();
+    return new User();
   }
 
   protected void saveUser(User user) {
@@ -51,12 +51,12 @@ public class AbstractHibernateTest {
 
   protected User loadUser(long id) {
     try (Session session = sessionFactory.openSession()) {
-      return session.find(ru.otus.hw17.api.model.hibernate.User.class, id);
+      return session.find(User.class, id);
     }
   }
 
   protected EntityStatistics getUserStatistics() {
     Statistics stats = sessionFactory.getStatistics();
-    return stats.getEntityStatistics(ru.otus.hw17.api.model.hibernate.User.class.getName());
+    return stats.getEntityStatistics(User.class.getName());
   }
 }

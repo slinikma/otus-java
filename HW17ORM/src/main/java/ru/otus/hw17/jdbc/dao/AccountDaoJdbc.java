@@ -4,13 +4,19 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw17.api.dao.AccountDao;
+import ru.otus.hw17.api.dao.AccountDaoException;
 import ru.otus.hw17.api.dao.UserDaoException;
+import ru.otus.hw17.api.model.User;
 import ru.otus.hw17.api.model.myorm.Account;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.jdbc.DbExecutor;
 import ru.otus.hw17.jdbc.sessionmanager.SessionManagerJdbc;
+import ru.otus.hw17.objectvisitor.ObjectTraverseException;
+import ru.otus.hw17.objectvisitor.Traverser;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -25,7 +31,23 @@ public class AccountDaoJdbc implements AccountDao {
   public Optional<Account> getAccount(long id) {
     try {
       dbExecutor.setConnection(getConnection());
-      return dbExecutor.load(id, Account.class);
+      return dbExecutor.load(id, Account.class, resultSet -> {
+        try {
+          if (resultSet.next()) {
+            // Можно сделать проще через new и передачу значений из resultSet через параметры, но я эксперементировал с рефлексией и визитором (:
+            return Traverser.loadObjectFromResultSet(resultSet, Account.class.getConstructor().newInstance());
+          }
+        } catch (SQLException | NoSuchMethodException | ObjectTraverseException e) {
+          logger.error(e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+        return null;
+      });
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -39,7 +61,7 @@ public class AccountDaoJdbc implements AccountDao {
       return dbExecutor.create(account);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      throw new UserDaoException(e);
+      throw new AccountDaoException(e);
     }
   }
 
@@ -50,7 +72,7 @@ public class AccountDaoJdbc implements AccountDao {
       dbExecutor.update(account);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      throw new UserDaoException(e);
+      throw new AccountDaoException(e);
     }
   }
 

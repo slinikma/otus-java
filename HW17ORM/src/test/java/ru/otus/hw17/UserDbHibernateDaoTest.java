@@ -47,11 +47,11 @@ public class UserDbHibernateDaoTest extends AbstractHibernateTest {
     numberList.add(tele2Number);
 
     // Используем id 0, как незаданный id
-    User expectedUser = new ru.otus.hw17.api.model.hibernate.User(0, "Вася", address, numberList);
+    User expectedUser = new User(0, "Вася", address, numberList);
 
     // После того, как создан объект пользователя, задаём его
-    mtsNumber.setUser((ru.otus.hw17.api.model.hibernate.User) expectedUser);
-    tele2Number.setUser((ru.otus.hw17.api.model.hibernate.User) expectedUser);
+    mtsNumber.setUser(expectedUser);
+    tele2Number.setUser(expectedUser);
 
     sessionManagerHibernate.beginSession(); // Можно вынести в сервис
     // Сохранение через мой DAO
@@ -61,12 +61,8 @@ public class UserDbHibernateDaoTest extends AbstractHibernateTest {
     // Получение напрямую через EntityManager
     User actualUser = loadUser(id);
 
-    assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("name", ((ru.otus.hw17.api.model.hibernate.User)expectedUser).getName());
+    assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("name", ((User)expectedUser).getName());
 
-    // TODO: почему-то не сравнивает PhoneDataSet (возможно, из-за ссылки на User),
-    // isEqualToComparingFieldByFieldRecursively так-же упал
-    // Посмотрел дебагом - всё ок, поля совпадают ...
-    // EqualsAndHashCode переопределили через lombok
     assertThat(actualUser).isEqualToComparingFieldByField(expectedUser);
   }
 
@@ -87,27 +83,23 @@ public class UserDbHibernateDaoTest extends AbstractHibernateTest {
     numberList.add(tele2Number);
 
     // Используем id 0, как незаданный id
-    User expectedUser = new ru.otus.hw17.api.model.hibernate.User(0, "Вася", address, numberList);
+    User expectedUser = new User(0, "Вася", address, numberList);
 
     // После того, как создан объект пользователя, задаём его
-    mtsNumber.setUser((ru.otus.hw17.api.model.hibernate.User) expectedUser);
-    tele2Number.setUser((ru.otus.hw17.api.model.hibernate.User) expectedUser);
+    mtsNumber.setUser((User) expectedUser);
+    tele2Number.setUser((User) expectedUser);
 
 
     // Сохранение напрямую через EntityManager
     saveUser(expectedUser);
 
-    assertThat(((ru.otus.hw17.api.model.hibernate.User)expectedUser).getId()).isGreaterThan(0);
+    assertThat(((User)expectedUser).getId()).isGreaterThan(0);
 
     sessionManagerHibernate.beginSession();
     // Получение пользователя через мой DAO
-    Optional<User> mayBeUser = userDaoHibernate.getUser(((ru.otus.hw17.api.model.hibernate.User)expectedUser).getId());
+    Optional<User> mayBeUser = userDaoHibernate.getUser(((User)expectedUser).getId());
     sessionManagerHibernate.commitSession();
 
-    // TODO: почему-то не сравнивает PhoneDataSet (возможно, из-за ссылки на User),
-    // isEqualToComparingFieldByFieldRecursively так-же упал
-    // Посмотрел дебагом - всё ок, поля совпадают ...
-    // EqualsAndHashCode переопределили через lombok
     assertThat(mayBeUser).isPresent().get().isEqualToComparingFieldByField(expectedUser);
   }
 
