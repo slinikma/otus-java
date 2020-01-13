@@ -15,7 +15,7 @@ public class ObjectField extends TraversedField {
   }
 
   @Override
-  public void accept(Visitor visitor) {
+  public void accept(Visitor visitor) throws NoSuchMethodException {
     visitor.visit(this);
   }
 }

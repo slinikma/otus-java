@@ -1,12 +1,13 @@
 package ru.otus.hw17.api.model.hibernate;
 
 import lombok.*;
+import ru.otus.hw17.api.model.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneDataSet {
@@ -26,4 +27,20 @@ public class PhoneDataSet {
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // получается двунаправленная связь
   @JoinColumn(name = "user_id")
   private User user;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof PhoneDataSet)) return false;
+    PhoneDataSet that = (PhoneDataSet) o;
+    return getId() == that.getId() &&
+        Objects.equals(getNumber(), that.getNumber());
+// TODO: не сравниваю User во избежании StackOverflowError
+//        Objects.equals(getUser(), that.getUser());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId(), getNumber()); // , getUser()
+  }
 }

@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw17.objectvisitor.ObjectTraverseException;
 import ru.otus.hw17.objectvisitor.Traverser;
+import ru.otus.hw17.objectvisitor.visitors.InsertQueryBuilder;
+import ru.otus.hw17.objectvisitor.visitors.SelectByIdQueryBuilder;
+import ru.otus.hw17.objectvisitor.visitors.UpdateQueryBuilder;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.Optional;
@@ -19,114 +21,89 @@ public class DbExecutor<T> {
   @Getter @Setter
   private Connection connection;
 
-  public long create(T objectData) throws ObjectTraverseException {
-    try {
-      PreparedStatement preparedStatement = Traverser.getInsertPreparedStatement(objectData);
-      return insertRecord(query);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      // TODO: почитать, как кидать исключение правильно
-      throw new ObjectTraverseException(e);
-    }
+  public long create(T objectData) throws ObjectTraverseException, SQLException {
 
-    return -1;
+    // TODO: встроить кэширование из ДЗ про cache engine
+    var insertQueryBuilderService = new InsertQueryBuilder();
+    Traverser.traverse(objectData, insertQueryBuilderService, null);
+
+    Savepoint savePoint = connection.setSavepoint("savePointName");
+    try (var prepareStatement = this.connection.prepareStatement(insertQueryBuilderService.getQueryString(), Statement.RETURN_GENERATED_KEYS)) {
+      // Цикл для замены '?' на параметры через PreparedStatement
+      // Тем самым защищаемся от SQL инъекций
+      var params = insertQueryBuilderService.getParams();
+      for (int i = 0; i < params.size(); i++) {
+        prepareStatement.setObject(i + 1, params.get(i));
+      }
+
+      prepareStatement.executeUpdate();
+
+      try (var resultSet = prepareStatement.getGeneratedKeys()) {
+        resultSet.next();
+        return resultSet.getLong(insertQueryBuilderService.getIdFieldName());
+      }
+    } catch (SQLException ex) {
+      connection.rollback(savePoint);
+      logger.error(ex.getMessage(), ex);
+      throw ex;
+    }
   }
 
-  public long update(T objectData) {
-    try {
-      PreparedStatement preparedStatement = Traverser.getUpdatePreparedStatement(objectData);
-      return insertRecord(query);
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    }
+  public long update(T objectData) throws SQLException, ObjectTraverseException {
 
-    return -1;
+    // TODO: встроить кэширование из ДЗ про cache engine
+    var updateQueryBuilderService = new UpdateQueryBuilder();
+    Traverser.traverse(objectData, updateQueryBuilderService, null);
+
+    Savepoint savePoint = connection.setSavepoint("savePointName");
+    try (var prepareStatement = this.connection.prepareStatement(updateQueryBuilderService.getQueryString())) {
+      // Заменяем '?' на ID PreparedStatement
+      // Тем самым защищаемся от SQL инъекций
+      var params = updateQueryBuilderService.getParams();
+      for (int i = 0; i < params.size(); i++) {
+        prepareStatement.setObject(i + 1, params.get(i));
+      }
+      prepareStatement.setObject(params.size() + 1, updateQueryBuilderService.getIdFieldValue());
+
+      prepareStatement.executeUpdate();
+
+      // TODO: возможно, ID нужно возвращать из ResultSet ...
+      return (Long) updateQueryBuilderService.getIdFieldValue();
+    } catch (SQLException ex) {
+      connection.rollback(savePoint);
+      logger.error(ex.getMessage(), ex);
+      throw ex;
+    }
   }
 
   // TODO: почему в задании <T> generic метод + generic класс?
   // Использую generic тип класса
-  public Optional<T> load(long id, Class<? extends T> clazz) {
+  public Optional<T> load(long id, Class<? extends T> clazz, Function<ResultSet, T> rsHandler) throws SQLException, ObjectTraverseException {
+
+    // TODO: встроить кэширование из ДЗ про cache engine
+    var selectByIdQueryBuilderService = new SelectByIdQueryBuilder();
     try {
-      PreparedStatement preparedStatement = Traverser.getSelectPreparedStatement(clazz);
-//      T obj = clazz.getConstructor(T);
-      // В параметры мы передаём классы, конструкторы которых тоже должны быть вызваны?
-      return selectRecord(query, id, resultSet -> {
-        try {
-          if (resultSet.next()) {
-            Constructor<? extends T> constructor = clazz.getConstructor();
-            T object = Traverser.loadObjectFromResultSet(resultSet, constructor.newInstance());
-            logger.info("Loaded object: " + object.toString());
-            return object;
-          }
-        } catch (SQLException | NoSuchMethodException e) {
-          logger.error(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        } catch (InstantiationException e) {
-          e.printStackTrace();
-        }
-        return null;
-      });
-      // TODO: что делать с таким количеством кетчей? это жесть
-      // пробрасывать ломбоком???
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      Traverser.traverse(clazz.getDeclaredConstructor().newInstance(), selectByIdQueryBuilderService, null);
     } catch (InstantiationException e) {
       e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
+    } catch (IllegalAccessException e) {
       e.printStackTrace();
     } catch (InvocationTargetException e) {
       e.printStackTrace();
-    } catch (SQLException e) {
+    } catch (NoSuchMethodException e) {
       e.printStackTrace();
     }
 
-    return null;
+    try (var prepareStatement = this.connection.prepareStatement(selectByIdQueryBuilderService.getQueryString())) {
+      prepareStatement.setLong(1, id);
+      try (var resultSet = prepareStatement.executeQuery()) {
+        return Optional.ofNullable(rsHandler.apply(resultSet));
+      }
+    }
   }
 
   // TODO: optional
 //  public void createOrUpdate(T objectData) {
 //
 //  }
-
-  private long insertRecord(String sql) throws SQLException {
-    Savepoint savePoint = this.connection.setSavepoint("savePointName");
-    try (Statement statement = this.connection.prepareStatement(sql)) {
-      statement.exe
-//      statement.executeUpdate();
-      // Выходит за рамки задания.
-      // Нужно из визитора возвращать id
-      return 1;
-    } catch (SQLException ex) {
-      this.connection.rollback(savePoint);
-      logger.error(ex.getMessage(), ex);
-      throw ex;
-    }
-  }
-
-  private Optional<T> selectRecord(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
-    try (PreparedStatement pst = this.connection.prepareStatement(sql)) {
-      pst.setLong(1, id);
-      try (ResultSet rs = pst.executeQuery()) {
-        return Optional.ofNullable(rsHandler.apply(rs));
-      }
-    }
-  }
 }

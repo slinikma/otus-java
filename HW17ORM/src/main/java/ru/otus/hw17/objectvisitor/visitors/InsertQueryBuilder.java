@@ -2,6 +2,7 @@ package ru.otus.hw17.objectvisitor.visitors;
 
 import lombok.Getter;
 import ru.otus.hw17.annotations.Id;
+import ru.otus.hw17.annotations.TraverserSkip;
 import ru.otus.hw17.objectvisitor.TraversedField;
 import ru.otus.hw17.objectvisitor.Visitor;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
@@ -42,6 +43,7 @@ public class InsertQueryBuilder implements Visitor {
 
   @Override
   public void visit(ArrayField field) throws NoSuchMethodException {
+
     // Сохраняем поля
     fieldList.add(field);
 
@@ -68,6 +70,8 @@ public class InsertQueryBuilder implements Visitor {
 
     if (isCommaNeeded) {
       query.append(",");
+    } else {
+      isCommaNeeded = true;
     }
 
     query.append(field.getName());
@@ -79,6 +83,7 @@ public class InsertQueryBuilder implements Visitor {
 
   @Override
   public void visit(PrimitiveField field) throws NoSuchMethodException {
+
     // Сохраняем поля
     fieldList.add(field);
 
@@ -96,30 +101,31 @@ public class InsertQueryBuilder implements Visitor {
       // Сохраняем поле id
       this.idFieldName = field.getName();
       this.idFieldValue = field.getBoxedPrimitive();
-    }
-
-    // Формируем SQL запрос
-    if (!this.isTableAppended) {
-      query.append(field.getFieldOfObject().getClass().getSimpleName())
-          .append("(");
-      this.isTableAppended = true;
-    }
-
-    if (isCommaNeeded) {
-      query.append(",");
     } else {
-      isCommaNeeded = true;
+      // Формируем SQL запрос
+      if (!this.isTableAppended) {
+        query.append(field.getFieldOfObject().getClass().getSimpleName())
+            .append("(");
+        this.isTableAppended = true;
+      }
+
+      if (isCommaNeeded) {
+        query.append(",");
+      } else {
+        isCommaNeeded = true;
+      }
+
+      query.append(field.getName());
+
+      // Сохраняем параметры SQL запроса
+      // TODO: возможно бессмысленно, т.к. уже сохранил поля объекта
+      params.add(field.getBoxedPrimitive());
     }
-
-    query.append(field.getName());
-
-    // Сохраняем параметры SQL запроса
-    // TODO: возможно бессмысленно, т.к. уже сохранил поля объекта
-    params.add(field.getBoxedPrimitive());
   }
 
   @Override
   public void visit(ObjectField field) throws NoSuchMethodException {
+
     // Сохраняем поля
     fieldList.add(field);
 
@@ -136,6 +142,7 @@ public class InsertQueryBuilder implements Visitor {
 
   @Override
   public void visit(StringField field) throws NoSuchMethodException {
+
     // Сохраняем поля
     fieldList.add(field);
 
@@ -153,24 +160,26 @@ public class InsertQueryBuilder implements Visitor {
       // Сохраняем поле id
       this.idFieldName = field.getName();
       this.idFieldValue = field.getValue();
+      // Поле с ID не добавляем в insert запрос
+    } else {
+      // Формируем SQL запрос
+      if (!this.isTableAppended) {
+        query.append(field.getFieldOfObject().getClass().getSimpleName())
+            .append("(");
+        this.isTableAppended = true;
+      }
+
+      if (isCommaNeeded) {
+        query.append(",");
+      } else {
+        isCommaNeeded = true;
+      }
+
+      query.append(field.getName());
+
+      // Сохраняем параметры SQL запроса
+      params.add(field.getValue());
     }
-
-    // Формируем SQL запрос
-    if (!this.isTableAppended) {
-      query.append(field.getFieldOfObject().getClass().getSimpleName())
-          .append("(");
-      this.isTableAppended = true;
-    }
-
-    if (isCommaNeeded) {
-      query.append(",");
-    }
-
-    query.append(field.getName());
-
-    // Сохраняем параметры SQL запроса
-    // TODO: возможно бессмысленно, т.к. уже сохранил поля объекта
-    params.add(field.getValue());
   }
 
   public String getQueryString() {
@@ -186,7 +195,7 @@ public class InsertQueryBuilder implements Visitor {
         isFirstParam = false;
       }
 
-      query.append(param);
+      query.append("?");
     }
     query.append(")");
 
