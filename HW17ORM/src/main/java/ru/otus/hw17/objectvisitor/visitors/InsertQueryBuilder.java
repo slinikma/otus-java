@@ -147,11 +147,13 @@ public class InsertQueryBuilder implements Visitor {
     fieldList.add(field);
 
     // Сохраняем имя класса
+    // TODO: сохранять у поля?
     if (className == null) {
       className = field.getFieldOfObject().getClass().getSimpleName();
     }
 
     // Сохраняем конструктор
+    // TODO: конструктор сохранять у поля?
     if (classConstructor == null) {
       classConstructor = field.getFieldOfObject().getClass().getConstructor();
     }

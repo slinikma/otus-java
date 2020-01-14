@@ -23,7 +23,6 @@ public class DbExecutor<T> {
 
   public long create(T objectData) throws ObjectTraverseException, SQLException {
 
-    // TODO: встроить кэширование из ДЗ про cache engine
     var insertQueryBuilderService = new InsertQueryBuilder();
     Traverser.traverse(objectData, insertQueryBuilderService, null);
 
@@ -51,7 +50,6 @@ public class DbExecutor<T> {
 
   public long update(T objectData) throws SQLException, ObjectTraverseException {
 
-    // TODO: встроить кэширование из ДЗ про cache engine
     var updateQueryBuilderService = new UpdateQueryBuilder();
     Traverser.traverse(objectData, updateQueryBuilderService, null);
 
@@ -80,7 +78,6 @@ public class DbExecutor<T> {
   // Использую generic тип класса
   public Optional<T> load(long id, Class<? extends T> clazz, Function<ResultSet, T> rsHandler) throws SQLException, ObjectTraverseException {
 
-    // TODO: встроить кэширование из ДЗ про cache engine
     var selectByIdQueryBuilderService = new SelectByIdQueryBuilder();
     try {
       Traverser.traverse(clazz.getDeclaredConstructor().newInstance(), selectByIdQueryBuilderService, null);
