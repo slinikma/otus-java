@@ -35,6 +35,8 @@ public class Traverser {
     }
 
     // Обрабатываем поля объекта
+    // TODO: кэширование тут! если класс уже разбирался, сетим новый объект и вызываем сервис
+    // что-то вроде WeakHashMap<object.getClass(), List<TraversedField>>
     Field[] fields = object.getClass().getDeclaredFields();
     for (Field field : fields) {
       // Пропускаем поля из ДЗ Hibernate
