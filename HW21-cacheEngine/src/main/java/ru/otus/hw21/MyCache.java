@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.hw21;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -50,5 +50,9 @@ public class MyCache<K, V> implements Cache {
   @Override
   public void removeListener(CacheListener listener) {
     this.listeners.remove(listener);
+  }
+
+  public int size() {
+    return cache.size();
   }
 }

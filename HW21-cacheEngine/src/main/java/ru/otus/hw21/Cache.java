@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.hw21;
 
 public interface Cache<K, V> {
 
@@ -11,4 +11,6 @@ public interface Cache<K, V> {
   void addListener(CacheListener listener);
 
   void removeListener(CacheListener listener);
+
+  int size();
 }

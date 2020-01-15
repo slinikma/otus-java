@@ -86,18 +86,18 @@ public class UserDbHibernateDaoTest extends AbstractHibernateTest {
     User expectedUser = new User(0, "Вася", address, numberList);
 
     // После того, как создан объект пользователя, задаём его
-    mtsNumber.setUser((User) expectedUser);
-    tele2Number.setUser((User) expectedUser);
+    mtsNumber.setUser(expectedUser);
+    tele2Number.setUser(expectedUser);
 
 
     // Сохранение напрямую через EntityManager
     saveUser(expectedUser);
 
-    assertThat(((User)expectedUser).getId()).isGreaterThan(0);
+    assertThat((expectedUser).getId()).isGreaterThan(0);
 
     sessionManagerHibernate.beginSession();
     // Получение пользователя через мой DAO
-    Optional<User> mayBeUser = userDaoHibernate.getUser(((User)expectedUser).getId());
+    Optional<User> mayBeUser = userDaoHibernate.getUser((expectedUser).getId());
     sessionManagerHibernate.commitSession();
 
     assertThat(mayBeUser).isPresent().get().isEqualToComparingFieldByField(expectedUser);

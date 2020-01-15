@@ -10,14 +10,22 @@ public class StringField extends TraversedField {
   @Getter private String value;
   @Getter private Object fieldOfObject;
 
-  public StringField(Field field, Object obj) throws IllegalAccessException {
-    super(field);
+  public StringField(Field field, Object obj) throws IllegalAccessException, NoSuchMethodException {
+    super(obj.getClass(), field);
     this.fieldOfObject = obj;
     this.value = (String) field.get(obj);
   }
 
   @Override
-  public void accept(Visitor visitor) throws NoSuchMethodException {
+  public TraversedField setObject(Object obj) throws IllegalAccessException {
+    this.fieldOfObject = obj;
+    this.value = (String) super.getField().get(obj);
+    return this;
+  }
+
+  @Override
+  public TraversedField accept(Visitor visitor) throws NoSuchMethodException {
     visitor.visit(this);
+    return this;
   }
 }

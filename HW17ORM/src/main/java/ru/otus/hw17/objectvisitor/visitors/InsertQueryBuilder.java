@@ -23,8 +23,6 @@ public class InsertQueryBuilder implements Visitor {
   @Getter private List<TraversedField> fieldList;
   @Getter private String idFieldName = null;
   @Getter private Object idFieldValue = null;
-  @Getter private Constructor classConstructor = null;
-  @Getter private String className = null;
 
   // Сохраняем производные от разобранного класса
   @Getter private List<Object> params;
@@ -46,16 +44,6 @@ public class InsertQueryBuilder implements Visitor {
 
     // Сохраняем поля
     fieldList.add(field);
-
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
 
     if (field.isAnnotationPresent(Id.class)) {
       throw new IllegalArgumentException("Array can't be an field id!");
@@ -86,16 +74,6 @@ public class InsertQueryBuilder implements Visitor {
 
     // Сохраняем поля
     fieldList.add(field);
-
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
 
     if (field.isAnnotationPresent(Id.class)) {
       // Сохраняем поле id
@@ -131,13 +109,7 @@ public class InsertQueryBuilder implements Visitor {
 
     // Сложное не примитивное поле, которое должно быть ссылкой на другую таблицу.
     // Выходит за рамки ДЗ
-    if (className == null) {
-      // Сохраняем имя класса
-      className = field.getFieldOfObject().getClass().getSimpleName();
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    } else {
-      throw new UnsupportedOperationException("Object fields unsupported!");
-    }
+    throw new UnsupportedOperationException("Object fields unsupported!");
   }
 
   @Override
@@ -145,18 +117,6 @@ public class InsertQueryBuilder implements Visitor {
 
     // Сохраняем поля
     fieldList.add(field);
-
-    // Сохраняем имя класса
-    // TODO: сохранять у поля?
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    // TODO: конструктор сохранять у поля?
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
 
     if (field.isAnnotationPresent(Id.class)) {
       // Сохраняем поле id
