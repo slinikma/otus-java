@@ -38,6 +38,7 @@ public class UserDaoHibernate implements UserDao {
       Session hibernateSession = currentSession.getSession();
       // Если ID у User задан, тогда пользователь уже отсоединён от контекста и находится в состоянии detached
       // Следовательно, мы делаем merge
+
       if (user.getId() > 0) {
         hibernateSession.merge(user);
         // Иначе, пользователь ещё не в базе, т.е. ещё не был присоединён к сессии и находится в состояние transient
@@ -45,7 +46,7 @@ public class UserDaoHibernate implements UserDao {
       } else {
         hibernateSession.persist(user);
       }
-
+      
       return user.getId();
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

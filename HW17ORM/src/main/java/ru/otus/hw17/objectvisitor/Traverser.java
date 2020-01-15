@@ -2,12 +2,14 @@ package ru.otus.hw17.objectvisitor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import ru.otus.hw17.annotations.TraverserSkip;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
 import ru.otus.hw17.objectvisitor.visitable.types.ObjectField;
 import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
 import ru.otus.hw17.objectvisitor.visitable.types.StringField;
 import ru.otus.hw17.objectvisitor.visitors.ResultSetObjectLoader;
+
 import ru.otus.hw21.Cache;
 import ru.otus.hw21.CacheListener;
 import ru.otus.hw21.MyCache;

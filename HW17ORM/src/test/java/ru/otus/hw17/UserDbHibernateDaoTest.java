@@ -89,7 +89,6 @@ public class UserDbHibernateDaoTest extends AbstractHibernateTest {
     mtsNumber.setUser(expectedUser);
     tele2Number.setUser(expectedUser);
 
-
     // Сохранение напрямую через EntityManager
     saveUser(expectedUser);
 
