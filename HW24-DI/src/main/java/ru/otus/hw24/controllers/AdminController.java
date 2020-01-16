@@ -25,7 +25,7 @@ public class AdminController {
   // GET /admin -> GET /admin
   @GetMapping(path = {"/", "/admin"})
   public String adminView(@NotNull Model model) {
-    return "admin_main.html";
+    return "index.html";
   }
 
   // GET /admin?action=showUsers -> GET /admin/user/list
