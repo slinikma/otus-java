@@ -1,83 +1,73 @@
 package ru.otus.hw27;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ThreadExplorer {
 
-  final CountDownLatch latch = new CountDownLatch(1);
-//  Object monitor = new Object();
-  private volatile Integer countA = 0;
-  private volatile Integer countB = 0;
-//  private AtomicInteger countA = new AtomicInteger(0);
-//  private AtomicInteger countB = new AtomicInteger(0);
+  private static Logger logger = LoggerFactory.getLogger(ThreadExplorer.class);
+  private static String thread1Name = "Thread 1";
+  private static String thread2Name = "Thread 2";
 
-  private void incrementToTenA(Integer count, String varName, Object monitor) throws InterruptedException {
-    for (var i = 0; i < 10; i++) {
-      synchronized (monitor) {
-        monitor.wait();
-        System.out.println("Increment " + varName + ": " + count++);
-//        System.out.println("Increment " + varName + ": " + countA++);
-        monitor.notifyAll();
-      }
+  private static String lastThreadName = "Thread 2";
+
+  private static void sleep() {
+    try {
+      Thread.sleep(1_000);
+    } catch (InterruptedException e) {
+      logger.error(e.getMessage());
+      Thread.currentThread().interrupt();
     }
   }
 
-  private void incrementToTenB(Integer count, String varName) {
-    for (var i = 0; i < 10; i++) {
-      synchronized (countA) {
-//      System.out.println("Increment " + varName + ": " + count.incrementAndGet());
-        System.out.println("Increment " + varName + ": " + countB++);
-      }
-    }
-  }
+  // Т.к. synchronized является барьером, то на lastThreadName volatile не нужен
+  private synchronized void doNumberCycle(int from, int to, int step) {
 
-  private void decrementToOne(Integer count, String varName) {
-    for (var i = 0; i < 9; i++) {
-      synchronized (countA) {
-//      System.out.println("Decrement " + varName + ": " + count.decrementAndGet());
-        System.out.println("Decrement " + varName + ": " + countB++);
-      }
-    }
-  }
+    Integer currentVal = from;
 
-  private void letsTry() throws InterruptedException {
-    Thread threadA = new Thread(() -> {
+    if (from < to) {
+      step = Math.abs(step);
+    } else {
+      step = Math.abs(step) * -1;
+    }
+
+    while (true) {
       try {
-        latch.await();
-//        countB.wait();
-        incrementToTen(countA, "countA", countB);
-//        decrementToOne(countA, "countA");
+        //spurious wakeup
+        while (lastThreadName.equals(Thread.currentThread().getName())) {
+          this.wait();
+        }
+
+        logger.info("{}: {}", Thread.currentThread().getName(), currentVal);
+
+        currentVal += step;
+
+        if (currentVal == to ||
+            currentVal == from)
+        {
+          step *= -1;
+        }
+
+        // Решил сделать по имени потока, хотя можно и currentVal использовать, но это только запутывает
+        lastThreadName = Thread.currentThread().getName();
+        sleep();
+        notifyAll();
+
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        Thread.currentThread().interrupt();
       }
-    });
-
-    Thread threadB = new Thread(() -> {
-      try {
-        latch.await();
-        incrementToTen(countB, "countB", countA);
-//        decrementToOne(countB, "countB");
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    });
-
-    threadA.start();
-    threadB.start();
-
-    latch.countDown();
-
-    threadA.join();
-    threadB.join();
+    }
   }
 
   public static void main(String[] args) {
     ThreadExplorer explorer = new ThreadExplorer();
-    try {
-      explorer.letsTry();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    Thread t1 = new Thread(() -> explorer.doNumberCycle(1, 10, 1));
+    Thread t2 = new Thread(() -> explorer.doNumberCycle(1, 10, 1));
+
+    t1.setName(thread1Name);
+    t2.setName(thread2Name);
+
+    t1.start();
+    t2.start();
   }
 }

@@ -14,5 +14,17 @@
   <groupId>ru.otus</groupId>
   <artifactId>HW27-JMM</artifactId>
 
+  <properties>
+    <logback-classic.version>1.2.3</logback-classic.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback-classic.version}</version>
+    </dependency>
+  </dependencies>
+
 
 </project>
