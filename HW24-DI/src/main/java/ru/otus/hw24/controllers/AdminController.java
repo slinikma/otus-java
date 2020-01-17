@@ -25,7 +25,7 @@ public class AdminController {
   // GET /admin -> GET /admin
   @GetMapping(path = {"/", "/admin"})
   public String adminView(@NotNull Model model) {
-    return "index.html";
+    return "admin_main.html";
   }
 
   // GET /admin?action=showUsers -> GET /admin/user/list
@@ -50,6 +50,4 @@ public class AdminController {
     this.userRepository.save(user.getLogin(), user.getPassword());
     return new RedirectView("/admin/user/list", true);
   }
-
-
 }

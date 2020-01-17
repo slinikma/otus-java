@@ -3,6 +3,7 @@ package ru.otus.hw24.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.NonFinal;
 
 // Заменил ru.otus.user.User -> ru.otus.hw24.domain.User
@@ -10,12 +11,12 @@ import lombok.experimental.NonFinal;
 // TODO: почему так? почему не сразу создавать объект с полями, а задавать их потом через сеттеры?
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class User {
-  @Getter
   @NonFinal
   String login;
 
-  @Getter
   @NonFinal
   String password;
 }
