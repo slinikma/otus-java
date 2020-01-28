@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Admin main page</title>
+  <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .users, .users td {
+            border: 1px solid lightgray;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            display: block;
+        }
+    </style>
+
+  <style th:inline="text">
+        h3 {
+            background: url([[@{/owl.png}]]) no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<p align="centre">
+<h3>Hey! You are an admin now! You have a great power!</h3>
+<br>
+<h3>So, now you can:</h3>
+<a th:href="@{/admin/user/list}" href="admin_show_users.html">Show all users</a>
+<a th:href="@{/admin/user/create}" href="admin_create_user.html">New user</a>
+</p>
+</body>
+</html>
