@@ -2,26 +2,21 @@ package ru.otus.HW28MessageSystem.messagesystem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.otus.HW28MessageSystem.common.Serializers;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-//@Component
-// TODO: т.к. есть конструктор в который я зазаю имя, то это не бин
-// TODO: или же использовать Autowired над конструктором с параметрами?
-// TODO: https://docs.spring.io/spring/docs/3.0.x/javadoc-api/index.html?org/springframework/beans/factory/annotation/Value.html
+
+// Как я понял, я не могу сделать класс клиента бином, т.к. мне нужно задать имя через конструктор
+// Находил вариант с использованием аспектов, но не получилось сделать
 public class MsClientImpl implements MsClient {
   private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
   private final String name;
 
-//  @Autowired
   MessageSystem messageSystem;
-  // Не может содержать 2 хэндлера с одинаковым MessageType
   private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
 
@@ -30,10 +25,8 @@ public class MsClientImpl implements MsClient {
     this.messageSystem = messageSystem;
   }
 
-//  public MsClientImpl(String name) {
-//    this.name = name;
-//  }
-
+  // Не может содержать 2 хэндлера с одинаковым MessageType
+  // Т.е. MessageType определяет, какой хэндлер будет вызван
   @Override
   public void addHandler(MessageType type, RequestHandler requestHandler) {
     this.handlers.put(type.getValue(), requestHandler);
@@ -44,6 +37,7 @@ public class MsClientImpl implements MsClient {
     return name;
   }
 
+  // Абстракция для остановки MessageSystem
   @Override
   public boolean sendMessage(Message msg) {
     boolean result = messageSystem.newMessage(msg);

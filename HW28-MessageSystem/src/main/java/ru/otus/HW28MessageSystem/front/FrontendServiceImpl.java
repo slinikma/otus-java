@@ -2,8 +2,6 @@ package ru.otus.HW28MessageSystem.front;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.otus.HW28MessageSystem.domain.User;
 import ru.otus.HW28MessageSystem.messagesystem.Message;
 import ru.otus.HW28MessageSystem.messagesystem.MessageType;
@@ -17,10 +15,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-// TODO: т.к. есть конструктор в который я задаю параметры, это не сервис
-// TODO: или же использовать Autowired над конструктором с параметрами?
-// TODO: https://docs.spring.io/spring/docs/3.0.x/javadoc-api/index.html?org/springframework/beans/factory/annotation/Value.html
-//@Service
+// Не можем сделать бином, т.к. MsClient не бин, а databaseServiceClientName хотим передать в конструктор
 public class FrontendServiceImpl implements FrontendService {
   private static final Logger logger = LoggerFactory.getLogger(FrontendServiceImpl.class);
 
@@ -29,26 +24,26 @@ public class FrontendServiceImpl implements FrontendService {
   // Имя получателя
   private final String databaseServiceClientName;
 
-//  @Autowired
   public FrontendServiceImpl(MsClient msClient, String databaseServiceClientName) {
     this.msClient = msClient;
     this.databaseServiceClientName = databaseServiceClientName;
   }
 
   @Override
-  public void getUserData(long userId, Consumer<String> dataConsumer) {
-    Message outMsg = msClient.produceMessage(databaseServiceClientName, userId, MessageType.USER_DATA);
+  public void getAllUsers(Consumer<List<User>> dataConsumer) {
+    // Сообщение предназначено для сервиса работы с базой данных и вызывает метод получения всех пользователей
+    // Сервис отвечает на сообщение с типом USERS_LIST, тело сообщения не важно в данном случае (как GET запрос)
+    Message outMsg = msClient.produceMessage(databaseServiceClientName, "", MessageType.USERS_LIST);
     consumerMap.put(outMsg.getId(), dataConsumer);
+    // Отправляем сообщение в очередь
     msClient.sendMessage(outMsg);
   }
 
   @Override
-  public void getAllUsers(Consumer<List<User>> dataConsumer) {
-    // Отправляем сообщение сервису базы данных, с сообщением *, типа USER_DATA
-    // TODO: USER_DATA определяет сервис? или по имени?
-    // TODO: видимо нужны отдельные сервисы? (нет)
-    // Сообщение предназначено для сервиса работы с базой данных и вызывает метод получения всех пользователей
-    Message outMsg = msClient.produceMessage(databaseServiceClientName, "", MessageType.USERS_LIST);
+  public void saveUser(User user, Consumer<User> dataConsumer) {
+    // Сообщение предназначено для сервиса работы с базой данных и вызывает метод создания пользователя
+    // Сервис отвечает на сообщение с типом USER_DATA
+    Message outMsg = msClient.produceMessage(databaseServiceClientName, user, MessageType.USER_DATA);
     // Мапа клбэк сервисов и id сообщений
     consumerMap.put(outMsg.getId(), dataConsumer);
     // Отправляем сообщение в мапу с сервисами

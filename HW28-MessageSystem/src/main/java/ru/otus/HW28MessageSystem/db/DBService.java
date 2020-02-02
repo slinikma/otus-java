@@ -6,6 +6,6 @@ import ru.otus.HW28MessageSystem.domain.User;
 import java.util.List;
 
 public interface DBService {
-//    String getUserData(long id);
+  User saveUser(User user);
   List<User> getAllUsers();
 }

@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 // API нашего серверного приложения
 // Формирует сообщения для message system
 public interface FrontendService {
-  void getUserData(long userId, Consumer<String> dataConsumer);
   void getAllUsers(Consumer<List<User>> dataConsumer);
+  void saveUser(User user, Consumer<User> dataConsumer);
 
   <T> Optional<Consumer<T>> takeConsumer(UUID sourceMessageId, Class<T> tClass);
 }

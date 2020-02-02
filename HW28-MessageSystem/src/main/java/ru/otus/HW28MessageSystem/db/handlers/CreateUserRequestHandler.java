@@ -8,18 +8,16 @@ import ru.otus.HW28MessageSystem.messagesystem.Message;
 import ru.otus.HW28MessageSystem.messagesystem.MessageType;
 import ru.otus.HW28MessageSystem.messagesystem.RequestHandler;
 
-import java.util.List;
-
 import java.util.Optional;
 
 @AllArgsConstructor
-public class GetAllUsersDataRequestHandler implements RequestHandler {
+public class CreateUserRequestHandler implements RequestHandler {
 
   DBService dbService;
 
   @Override
   public Optional<Message> handle(Message msg) {
-    List<User> data = dbService.getAllUsers();
-    return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.USERS_LIST.getValue(), Serializers.serialize(data)));
+    User user = dbService.saveUser(Serializers.deserialize(msg.getPayload(), User.class));
+    return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.USER_DATA.getValue(), Serializers.serialize(user)));
   }
 }

@@ -5,13 +5,16 @@ import lombok.experimental.NonFinal;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @Document(collection = "authenticationData")
-public class User {
+public class User implements Serializable {
 
   @Id
   @NonFinal
