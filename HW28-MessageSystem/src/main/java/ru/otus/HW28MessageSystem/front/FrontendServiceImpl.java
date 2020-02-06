@@ -1,5 +1,7 @@
 package ru.otus.HW28MessageSystem.front;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.HW28MessageSystem.domain.User;
@@ -8,10 +10,7 @@ import ru.otus.HW28MessageSystem.messagesystem.MessageType;
 import ru.otus.HW28MessageSystem.messagesystem.MsClient;
 
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -19,7 +18,8 @@ import java.util.function.Consumer;
 public class FrontendServiceImpl implements FrontendService {
   private static final Logger logger = LoggerFactory.getLogger(FrontendServiceImpl.class);
 
-  private final Map<UUID, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
+  private final Map<CompositeKey, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
+  private Consumer<String> errorConsumer;
   private final MsClient msClient;
   // Имя получателя
   private final String databaseServiceClientName;
@@ -34,29 +34,39 @@ public class FrontendServiceImpl implements FrontendService {
     // Сообщение предназначено для сервиса работы с базой данных и вызывает метод получения всех пользователей
     // Сервис отвечает на сообщение с типом USERS_LIST, тело сообщения не важно в данном случае (как GET запрос)
     Message outMsg = msClient.produceMessage(databaseServiceClientName, "", MessageType.USERS_LIST);
-    consumerMap.put(outMsg.getId(), dataConsumer);
+    consumerMap.put(new CompositeKey(outMsg.getId(), ArrayList.class), dataConsumer);
     // Отправляем сообщение в очередь
     msClient.sendMessage(outMsg);
   }
 
   @Override
-  public void saveUser(User user, Consumer<User> dataConsumer) {
+  public void saveUser(User user, Consumer<User> dataConsumer, Consumer<String> errorConsumer) {
     // Сообщение предназначено для сервиса работы с базой данных и вызывает метод создания пользователя
     // Сервис отвечает на сообщение с типом USER_DATA
     Message outMsg = msClient.produceMessage(databaseServiceClientName, user, MessageType.USER_DATA);
     // Мапа клбэк сервисов и id сообщений
-    consumerMap.put(outMsg.getId(), dataConsumer);
+    consumerMap.put(new CompositeKey(outMsg.getId(), User.class), dataConsumer);
+    consumerMap.put(new CompositeKey(outMsg.getId(), String.class), errorConsumer);
     // Отправляем сообщение в мапу с сервисами
     msClient.sendMessage(outMsg);
   }
 
   @Override
   public <T> Optional<Consumer<T>> takeConsumer(UUID sourceMessageId, Class<T> tClass) {
-    Consumer<T> consumer = (Consumer<T>) consumerMap.remove(sourceMessageId);
+    // Как-то кривенько ...
+    Consumer<T> consumer = (Consumer<T>) consumerMap.remove(new CompositeKey(sourceMessageId, tClass));
     if (consumer == null) {
       logger.warn("consumer not found for:{}", sourceMessageId);
       return Optional.empty();
     }
     return Optional.of(consumer);
+  }
+
+
+  @EqualsAndHashCode
+  @AllArgsConstructor
+  private class CompositeKey<T> {
+    UUID sourceMessageId;
+    Class tClass;
   }
 }

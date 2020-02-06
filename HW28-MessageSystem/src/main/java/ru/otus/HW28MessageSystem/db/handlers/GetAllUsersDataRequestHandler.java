@@ -19,7 +19,11 @@ public class GetAllUsersDataRequestHandler implements RequestHandler {
 
   @Override
   public Optional<Message> handle(Message msg) {
-    List<User> data = dbService.getAllUsers();
-    return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.USERS_LIST.getValue(), Serializers.serialize(data)));
+    try {
+      List<User> data = dbService.getAllUsers();
+      return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.USERS_LIST.getValue(), Serializers.serialize(data)));
+    } catch(Exception e){
+      return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.ERRORS.getValue(), Serializers.serialize(e)));
+    }
   }
 }

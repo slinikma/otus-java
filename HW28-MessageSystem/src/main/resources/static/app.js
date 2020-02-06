@@ -3,12 +3,19 @@ let stompClient = null;
 let isConnected = false;
 
 function connect() {
+     console.log("Called connect()");
      stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
      stompClient.connect({}, frame => {
         isConnected = true;
         console.log(`Connected: ${frame}`);
-        stompClient.subscribe('/topic/response', response => {
+        stompClient.subscribe('/user/topic/response/user/list', response => {
           printToTable(JSON.parse(response.body));
+        });
+        stompClient.subscribe('/topic/response/user/list', response => {
+          printToTable(JSON.parse(response.body));
+        });
+        stompClient.subscribe('/user/topic/response/errors', response => {
+          //printToTable(JSON.parse(response.body));
         });
 
         stompClient.send("/app/admin/user/list");
@@ -21,11 +28,16 @@ function connect1() {
      stompClient.connect({}, frame => {
         isConnected = true;
         console.log(`Connected: ${frame}`);
-        stompClient.subscribe('/topic/response', response => {
-            connect();
+        stompClient.subscribe('/topic/response/user/list', response => {
+            printToTable(JSON.parse(response.body));
+            window.location.pathname = '/admin_show_users.html'
+//            getAllUsers();
         // TODO: редирект??
 //          createNewUser();
 //stompClient.send("/app/admin/user/list");
+        });
+        stompClient.subscribe('/user/topic/response/errors', response => {
+                  //printToTable(JSON.parse(response.body));
         });
 
         createNewUser();

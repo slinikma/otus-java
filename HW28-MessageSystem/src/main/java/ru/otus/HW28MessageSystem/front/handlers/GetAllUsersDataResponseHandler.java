@@ -15,10 +15,7 @@ import ru.otus.HW28MessageSystem.messagesystem.RequestHandler;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.List;
 
-//@Component("getAllUsersDataResponseHandler")
-//@Configurable
 @AllArgsConstructor
 public class GetAllUsersDataResponseHandler implements RequestHandler {
 

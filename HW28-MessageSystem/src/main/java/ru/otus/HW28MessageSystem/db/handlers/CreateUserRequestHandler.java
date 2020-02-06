@@ -17,7 +17,11 @@ public class CreateUserRequestHandler implements RequestHandler {
 
   @Override
   public Optional<Message> handle(Message msg) {
-    User user = dbService.saveUser(Serializers.deserialize(msg.getPayload(), User.class));
-    return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.USER_DATA.getValue(), Serializers.serialize(user)));
+    try {
+      User user = dbService.saveUser(Serializers.deserialize(msg.getPayload(), User.class));
+      return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.USER_DATA.getValue(), Serializers.serialize(user)));
+    } catch(Exception e){
+      return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.ERRORS.getValue(), Serializers.serialize(e.getMessage())));
+    }
   }
 }

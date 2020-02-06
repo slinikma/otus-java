@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 // Формирует сообщения для message system
 public interface FrontendService {
   void getAllUsers(Consumer<List<User>> dataConsumer);
-  void saveUser(User user, Consumer<User> dataConsumer);
+  void saveUser(User user, Consumer<User> dataConsumer, Consumer<String> errorConsumer);
 
   <T> Optional<Consumer<T>> takeConsumer(UUID sourceMessageId, Class<T> tClass);
 }

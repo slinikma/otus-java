@@ -3,6 +3,7 @@ package ru.otus.HW28MessageSystem.domain;
 import lombok.*;
 import lombok.experimental.NonFinal;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -16,7 +17,8 @@ import java.io.Serializable;
 @Document(collection = "authenticationData")
 public class User implements Serializable {
 
-  @Id
+//  @Id
+  @Indexed(unique = true)
   @NonFinal
   String login;
 
