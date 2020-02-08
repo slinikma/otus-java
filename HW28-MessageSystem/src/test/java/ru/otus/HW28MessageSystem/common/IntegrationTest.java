@@ -3,7 +3,6 @@ package ru.otus.HW28MessageSystem.common;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.HW28MessageSystem.db.DBService;
@@ -71,41 +70,19 @@ public class IntegrationTest {
 
   @DisplayName("Базовый сценарий получения данных")
   @RepeatedTest(1000)
+  // TODO: если тест получает каждый раз одни и те-же данные, он адекватный? что тестирую?
   public void getAllUsers() throws Exception {
     int counter = 3;
     CountDownLatch waitLatch = new CountDownLatch(counter);
 
     IntStream.range(0, counter).forEach(id ->
         frontendService.getAllUsers(data -> {
-          // TODO: заполнить объектами, а потом получить
           assertThat(users).isEqualTo(users);
           waitLatch.countDown();
         }));
 
     waitLatch.await();
     messageSystem.dispose();
-    logger.info("done");
-  }
-
-  @DisplayName("Выполнение запроса после остановки сервиса")
-  @RepeatedTest(1000)
-  public void getDataAfterShutdown() throws Exception {
-    messageSystem.dispose();
-
-    CountDownLatch waitLatchShutdown = new CountDownLatch(1);
-
-    Mockito.reset(frontendMsClient);
-    when(frontendMsClient.sendMessage(any(Message.class))).
-        thenAnswer(invocation -> {
-          waitLatchShutdown.countDown();
-          return null;
-        });
-
-    frontendService.getAllUsers(data -> logger.info("data:{}", data));
-    waitLatchShutdown.await();
-    boolean result = verify(frontendMsClient).sendMessage(any(Message.class));
-    assertThat(result).isFalse();
-
     logger.info("done");
   }
 }

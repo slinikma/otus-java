@@ -71,7 +71,6 @@ public class AdminController {
   @MessageMapping("/admin/user/list")
   public void userListView(SimpMessageHeaderAccessor sha) {
 
-    // TODO: GetAllUsersDataRequestHandler
     log.info("got userListView request");
     frontendService.getAllUsers(users -> {
       logger.info("Users: {}", users);
