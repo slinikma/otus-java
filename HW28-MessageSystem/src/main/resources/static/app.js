@@ -79,6 +79,10 @@ function stopMessageSystem() {
         stompClient.subscribe('/user/topic/response/errors', response => {
           alert(response.body);
         });
+
+        stompClient.send("/app/messagesystem/stop",
+                {},
+                {});
     });
   }
 }
