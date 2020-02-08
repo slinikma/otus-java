@@ -19,6 +19,7 @@
 *.iml
 .DS_Store
 
+.mvn
 .idea
 .vscode
 target
