@@ -22,8 +22,6 @@ import ru.otus.HW28MessageSystem.front.handlers.GetAllUsersDataResponseHandler;
 import ru.otus.HW28MessageSystem.messagesystem.*;
 
 import javax.annotation.PostConstruct;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
 
 @Slf4j
 @RestController
@@ -88,7 +86,6 @@ public class AdminController {
     frontendService.saveUser(user, result -> {
       logger.info("New use: {}", result);
       if (user.equals(result)) {
-//        messaging.convertAndSend("/topic/response/user/create", "User was successfully created!");
         // Оповещаем всех о новом пользователе!
         frontendService.getAllUsers(users -> {
           logger.info("Users: {}", users);
@@ -101,10 +98,18 @@ public class AdminController {
     });
   }
 
+  @MessageMapping("/messagesystem/stop")
+  public void stopMessageSystem(SimpMessageHeaderAccessor sha) throws InterruptedException {
+
+    log.info("got stop signal");
+    messageSystem.dispose();
+    messaging.convertAndSendToUser(sha.getUser().getName(), "/topic/response/messagesystem", "Message system was stopped!");
+  }
+
   @MessageExceptionHandler()
-  @SendToUser("/queue/errors")
-  public Throwable handleExceptions(Throwable t) {
+  @SendToUser("/topic/response/errors")
+  public String handleExceptions(Throwable t) {
     logger.error("Error handling message: " + t.getMessage());
-    return t;
+    return "Message system was stopped!";
   }
 }

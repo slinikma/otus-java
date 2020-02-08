@@ -7,10 +7,17 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.HW28MessageSystem.db.DBService;
+import ru.otus.HW28MessageSystem.db.handlers.CreateUserRequestHandler;
+import ru.otus.HW28MessageSystem.db.handlers.GetAllUsersDataRequestHandler;
+import ru.otus.HW28MessageSystem.domain.User;
 import ru.otus.HW28MessageSystem.front.FrontendService;
 import ru.otus.HW28MessageSystem.front.FrontendServiceImpl;
+import ru.otus.HW28MessageSystem.front.handlers.CreateUserResponseHandler;
+import ru.otus.HW28MessageSystem.front.handlers.GetAllUsersDataResponseHandler;
 import ru.otus.HW28MessageSystem.messagesystem.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
@@ -31,21 +38,31 @@ public class IntegrationTest {
   private MsClient databaseMsClient;
   private MsClient frontendMsClient;
 
+  List users = new ArrayList<User>();
+
 
   @BeforeEach
   public void setup() {
     logger.info("setup");
     messageSystem = new MessageSystemImpl();
 
+    users.add(new User("login1", "password1"));
+    users.add(new User("login2", "password2"));
+    users.add(new User("login3", "password3"));
+    users.add(new User("login4", "password4"));
+
     databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem));
     DBService dbService = mock(DBService.class);
-    when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long)invocation.getArgument(0)));
-    databaseMsClient.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
+    when(dbService.saveUser(any(User.class))).thenAnswer(invocation -> String.valueOf((Long)invocation.getArgument(0)));
+    when(dbService.getAllUsers()).thenAnswer(invocation -> users);
+    databaseMsClient.addHandler(MessageType.USER_DATA, new CreateUserRequestHandler(dbService));
+    databaseMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataRequestHandler(dbService));
     messageSystem.addClient(databaseMsClient);
 
     frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem));
     frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
-    frontendMsClient.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler(frontendService));
+    frontendMsClient.addHandler(MessageType.USER_DATA, new CreateUserResponseHandler(frontendService));
+    frontendMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataResponseHandler(frontendService));
     messageSystem.addClient(frontendMsClient);
 
     logger.info("setup done");
@@ -54,13 +71,14 @@ public class IntegrationTest {
 
   @DisplayName("Базовый сценарий получения данных")
   @RepeatedTest(1000)
-  public void getDataById() throws Exception {
+  public void getAllUsers() throws Exception {
     int counter = 3;
     CountDownLatch waitLatch = new CountDownLatch(counter);
 
     IntStream.range(0, counter).forEach(id ->
-        frontendService.getUserData(id, data -> {
-          assertThat(data).isEqualTo(String.valueOf(id));
+        frontendService.getAllUsers(data -> {
+          // TODO: заполнить объектами, а потом получить
+          assertThat(users).isEqualTo(users);
           waitLatch.countDown();
         }));
 
@@ -83,7 +101,7 @@ public class IntegrationTest {
           return null;
         });
 
-    frontendService.getUserData(5, data -> logger.info("data:{}", data));
+    frontendService.getAllUsers(data -> logger.info("data:{}", data));
     waitLatchShutdown.await();
     boolean result = verify(frontendMsClient).sendMessage(any(Message.class));
     assertThat(result).isFalse();

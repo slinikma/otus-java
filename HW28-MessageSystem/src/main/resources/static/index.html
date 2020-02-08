@@ -25,6 +25,11 @@
         }
    </style>
 
+  <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+  <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+  <script src="/webjars/jquery/jquery.min.js"></script>
+  <script src="/app.js"></script>
+
 </head>
 <body>
 <p align="centre">
@@ -33,6 +38,9 @@
 <h3>So, now you can:</h3>
 <a href="admin_show_users.html">Show all users</a>
 <a href="admin_create_user.html">New user</a>
+<br>
+<br>
+<button type="button" id="stop-ms" class="btn btn-default">Stop Message System</button>
 </p>
 </body>
 </html>

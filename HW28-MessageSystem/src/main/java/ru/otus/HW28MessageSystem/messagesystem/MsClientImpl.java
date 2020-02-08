@@ -42,7 +42,8 @@ public class MsClientImpl implements MsClient {
   public boolean sendMessage(Message msg) {
     boolean result = messageSystem.newMessage(msg);
     if (!result) {
-      logger.error("the last message was rejected: {}", msg);
+      logger.warn("the last message was rejected: {}", msg);
+      throw new RuntimeException("the last message was rejected: " + msg);
     }
     return result;
   }

@@ -115,7 +115,6 @@ public final class MessageSystemImpl implements MessageSystem {
   @Override
   public boolean newMessage(Message msg) {
     if (runFlag.get()) {
-      // TODO: повторить про offer
       return messageQueue.offer(msg);
     } else {
       logger.warn("MS is being shutting down... rejected:{}", msg);
