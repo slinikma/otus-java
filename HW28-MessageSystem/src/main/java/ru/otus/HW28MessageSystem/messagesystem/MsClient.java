@@ -2,7 +2,7 @@ package ru.otus.HW28MessageSystem.messagesystem;
 
 public interface MsClient {
 
-  void addHandler(MessageType type, RequestHandler requestHandler);
+  MsClient addHandler(MessageType type, RequestHandler requestHandler);
 
   boolean sendMessage(Message msg);
 

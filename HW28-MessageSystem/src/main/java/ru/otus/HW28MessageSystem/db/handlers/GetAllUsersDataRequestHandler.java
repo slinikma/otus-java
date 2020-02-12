@@ -1,6 +1,8 @@
 package ru.otus.HW28MessageSystem.db.handlers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.otus.HW28MessageSystem.common.Serializers;
 import ru.otus.HW28MessageSystem.db.DBService;
 import ru.otus.HW28MessageSystem.domain.User;
@@ -12,10 +14,15 @@ import java.util.List;
 
 import java.util.Optional;
 
-@AllArgsConstructor
+@Component("getAllUsersDataRequestHandler")
 public class GetAllUsersDataRequestHandler implements RequestHandler {
 
-  DBService dbService;
+  private final DBService dbService;
+
+  @Autowired
+  public GetAllUsersDataRequestHandler(DBService dbService) {
+    this.dbService = dbService;
+  }
 
   @Override
   public Optional<Message> handle(Message msg) {

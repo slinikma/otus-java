@@ -1,7 +1,5 @@
 package ru.otus.HW28MessageSystem.messagesystem;
 
-import org.springframework.stereotype.Component;
-
 public interface MessageSystem {
 
   void addClient(MsClient msClient);

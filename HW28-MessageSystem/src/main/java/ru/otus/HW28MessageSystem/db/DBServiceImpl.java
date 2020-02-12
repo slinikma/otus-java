@@ -13,8 +13,12 @@ import java.util.List;
 public class DBServiceImpl implements DBService {
   private static final Logger logger = LoggerFactory.getLogger(DBServiceImpl.class);
 
+  private final UserRepository userRepository;
+
   @Autowired
-  UserRepository userRepository;
+  public DBServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   public User saveUser(User user) {
     logger.info("saving user {} in DB", user);

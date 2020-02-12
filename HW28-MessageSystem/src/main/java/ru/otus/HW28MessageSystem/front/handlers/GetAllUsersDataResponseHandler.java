@@ -1,13 +1,10 @@
 package ru.otus.HW28MessageSystem.front.handlers;
 
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 import ru.otus.HW28MessageSystem.common.Serializers;
-import ru.otus.HW28MessageSystem.domain.User;
 import ru.otus.HW28MessageSystem.front.FrontendService;
 import ru.otus.HW28MessageSystem.messagesystem.Message;
 import ru.otus.HW28MessageSystem.messagesystem.RequestHandler;
@@ -16,12 +13,17 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-@AllArgsConstructor
+@Component("getAllUsersDataResponseHandler")
 public class GetAllUsersDataResponseHandler implements RequestHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(GetAllUsersDataResponseHandler.class);
 
-  private FrontendService frontendService;
+  private final FrontendService frontendService;
+
+  @Autowired
+  public GetAllUsersDataResponseHandler(FrontendService frontendService) {
+    this.frontendService = frontendService;
+  }
 
   @Override
   public Optional<Message> handle(Message msg) {

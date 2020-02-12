@@ -40,32 +40,32 @@ public class IntegrationTest {
   List users = new ArrayList<User>();
 
 
-  @BeforeEach
-  public void setup() {
-    logger.info("setup");
-    messageSystem = new MessageSystemImpl();
-
-    users.add(new User("login1", "password1"));
-    users.add(new User("login2", "password2"));
-    users.add(new User("login3", "password3"));
-    users.add(new User("login4", "password4"));
-
-    databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem));
-    DBService dbService = mock(DBService.class);
-    when(dbService.saveUser(any(User.class))).thenAnswer(invocation -> String.valueOf((Long)invocation.getArgument(0)));
-    when(dbService.getAllUsers()).thenAnswer(invocation -> users);
-    databaseMsClient.addHandler(MessageType.USER_DATA, new CreateUserRequestHandler(dbService));
-    databaseMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataRequestHandler(dbService));
-    messageSystem.addClient(databaseMsClient);
-
-    frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem));
-    frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
-    frontendMsClient.addHandler(MessageType.USER_DATA, new CreateUserResponseHandler(frontendService));
-    frontendMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataResponseHandler(frontendService));
-    messageSystem.addClient(frontendMsClient);
-
-    logger.info("setup done");
-  }
+//  @BeforeEach
+//  public void setup() {
+//    logger.info("setup");
+//    messageSystem = new MessageSystemImpl();
+//
+//    users.add(new User("login1", "password1"));
+//    users.add(new User("login2", "password2"));
+//    users.add(new User("login3", "password3"));
+//    users.add(new User("login4", "password4"));
+//
+//    databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem));
+//    DBService dbService = mock(DBService.class);
+//    when(dbService.saveUser(any(User.class))).thenAnswer(invocation -> String.valueOf((Long)invocation.getArgument(0)));
+//    when(dbService.getAllUsers()).thenAnswer(invocation -> users);
+//    databaseMsClient.addHandler(MessageType.USER_DATA, new CreateUserRequestHandler(dbService));
+//    databaseMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataRequestHandler(dbService));
+//    messageSystem.addClient(databaseMsClient);
+//
+//    frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem));
+//    frontendService = new FrontendServiceImpl(frontendMsClient);
+//    frontendMsClient.addHandler(MessageType.USER_DATA, new CreateUserResponseHandler(frontendService));
+//    frontendMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataResponseHandler(frontendService));
+//    messageSystem.addClient(frontendMsClient);
+//
+//    logger.info("setup done");
+//  }
 
 
   @DisplayName("Базовый сценарий получения данных")

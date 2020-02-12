@@ -10,15 +10,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.HW28MessageSystem.db.DBService;
-import ru.otus.HW28MessageSystem.db.handlers.CreateUserRequestHandler;
-import ru.otus.HW28MessageSystem.db.handlers.GetAllUsersDataRequestHandler;
 import ru.otus.HW28MessageSystem.domain.User;
 import ru.otus.HW28MessageSystem.front.FrontendService;
-import ru.otus.HW28MessageSystem.front.FrontendServiceImpl;
-import ru.otus.HW28MessageSystem.front.handlers.CreateUserResponseHandler;
-import ru.otus.HW28MessageSystem.front.handlers.ErrorHandler;
-import ru.otus.HW28MessageSystem.front.handlers.GetAllUsersDataResponseHandler;
 import ru.otus.HW28MessageSystem.messagesystem.*;
 
 import javax.annotation.PostConstruct;
@@ -29,37 +22,55 @@ public class AdminController {
 
   private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-  private static final String FRONTEND_SERVICE_CLIENT_NAME = "frontendService";
-  private static final String DATABASE_SERVICE_CLIENT_NAME = "databaseService";
+  private final MessageSystem messageSystem;
 
-  @Autowired
-  MessageSystem messageSystem;
+  private final MsClient databaseMsClient;
 
-  @Autowired
-  DBService dbService;
+  private final MsClient frontendMsClient;
 
   // Исполльзование messaging template (spring in action 4th, chapter 18)
+  private final SimpMessageSendingOperations messaging;
+
+  private final FrontendService frontendService;
+
   @Autowired
-  private SimpMessageSendingOperations messaging;
+  public AdminController(MessageSystem messageSystem,
+                         MsClient databaseMsClient,
+                         MsClient frontendMsClient,
+                         SimpMessageSendingOperations messaging,
+                         FrontendService frontendService)
+  {
+    this.messageSystem = messageSystem;
+    this.databaseMsClient = databaseMsClient;
+    this.frontendMsClient = frontendMsClient;
+    this.messaging = messaging;
+    this.frontendService = frontendService;
+  }
 
-  private FrontendService frontendService;
 
+  @Autowired
+  public void setupDatabaseMsClient(RequestHandler createUserRequestHandler,
+                                    RequestHandler getAllUsersDataRequestHandler)
+  {
+    databaseMsClient
+        .addHandler(MessageType.USER_DATA, createUserRequestHandler)
+        .addHandler(MessageType.USERS_LIST, getAllUsersDataRequestHandler);
+  }
+
+  @Autowired
+  public void setupFrontendMsClient(RequestHandler createUserResponseHandler,
+                                   RequestHandler getAllUsersDataResponseHandler,
+                                   RequestHandler errorHandler)
+  {
+    frontendMsClient
+        .addHandler(MessageType.USER_DATA, createUserResponseHandler)
+        .addHandler(MessageType.USERS_LIST, getAllUsersDataResponseHandler)
+        .addHandler(MessageType.ERRORS, errorHandler);
+  }
 
   @PostConstruct
-  public void init() {
-
-    MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem);
-    databaseMsClient.addHandler(MessageType.USER_DATA, new CreateUserRequestHandler(dbService));
-    databaseMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataRequestHandler(dbService));
+  public void setupMessageSystem() {
     messageSystem.addClient(databaseMsClient);
-
-    MsClient frontendMsClient = new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem);
-
-    frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
-
-    frontendMsClient.addHandler(MessageType.USER_DATA, new CreateUserResponseHandler(frontendService));
-    frontendMsClient.addHandler(MessageType.USERS_LIST, new GetAllUsersDataResponseHandler(frontendService));
-    frontendMsClient.addHandler(MessageType.ERRORS, new ErrorHandler(frontendService));
     messageSystem.addClient(frontendMsClient);
   }
 

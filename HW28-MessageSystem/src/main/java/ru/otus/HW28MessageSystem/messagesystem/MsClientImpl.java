@@ -28,8 +28,9 @@ public class MsClientImpl implements MsClient {
   // Не может содержать 2 хэндлера с одинаковым MessageType
   // Т.е. MessageType определяет, какой хэндлер будет вызван
   @Override
-  public void addHandler(MessageType type, RequestHandler requestHandler) {
+  public MsClient addHandler(MessageType type, RequestHandler requestHandler) {
     this.handlers.put(type.getValue(), requestHandler);
+    return this;
   }
 
   @Override
