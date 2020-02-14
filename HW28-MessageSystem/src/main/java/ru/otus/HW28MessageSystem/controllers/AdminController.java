@@ -61,11 +61,7 @@ public class AdminController {
       logger.info("New use: {}", result);
       if (user.equals(result)) {
         // Оповещаем всех о новом пользователе!
-        frontendService.getAllUsers(users -> {
-          logger.info("Users: {}", users);
-          // TODO: стоит ли использовать имя юзера в ID сообщения?
-          messaging.convertAndSend("/topic/response/user/list", users);
-        });
+        messaging.convertAndSend("/topic/response/new/user", result);
       }
     }, error -> {
       messaging.convertAndSendToUser(sha.getUser().getName(), "/topic/response/errors", error);

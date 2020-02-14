@@ -33,6 +33,10 @@ function getAllUsers() {
           stompClient.subscribe('/topic/response/user/list', response => {
             printToTable(JSON.parse(response.body));
           });
+          stompClient.subscribe('/topic/response/new/user', response => {
+              console.log("Hey, new user was created! " + response);
+              appendToTable(JSON.parse(response.body));
+          });
           stompClient.subscribe('/user/topic/response/errors', response => {
             alert(response.body);
           });
@@ -51,8 +55,8 @@ function createNewUser() {
             JSON.stringify({'login': $("#holder-input-login").val(), 'password': $("#holder-input-password").val()}));
     } else {
         connect(() => {
-          stompClient.subscribe('/topic/response/user/list', response => {
-              printToTable(JSON.parse(response.body));
+          stompClient.subscribe('/topic/response/new/user', response => {
+              console.log("Hey, new user was created! " + response);
               window.location.pathname = '/admin_show_users.html'
           });
           stompClient.subscribe('/user/topic/response/errors', response => {
@@ -95,6 +99,13 @@ function printToTable(users) {
     $.each(users, function(index, value){
       $("#tdata").append("<tr>" + "<td>" + value.login + "</td>" + "<td>" + value.password + "</td>" + "</tr>")
     });
+};
+
+function appendToTable(user) {
+    console.log("appending to table ... ");
+    console.log(user);
+
+    $("#tdata").append("<tr>" + "<td>" + user.login + "</td>" + "<td>" + user.password + "</td>" + "</tr>")
 };
 
 $(function () {
