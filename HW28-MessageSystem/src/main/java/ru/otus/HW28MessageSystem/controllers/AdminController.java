@@ -14,7 +14,6 @@ import ru.otus.HW28MessageSystem.domain.User;
 import ru.otus.HW28MessageSystem.front.FrontendService;
 import ru.otus.HW28MessageSystem.messagesystem.*;
 
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @RestController
@@ -24,10 +23,6 @@ public class AdminController {
 
   private final MessageSystem messageSystem;
 
-  private final MsClient databaseMsClient;
-
-  private final MsClient frontendMsClient;
-
   // Исполльзование messaging template (spring in action 4th, chapter 18)
   private final SimpMessageSendingOperations messaging;
 
@@ -35,43 +30,12 @@ public class AdminController {
 
   @Autowired
   public AdminController(MessageSystem messageSystem,
-                         MsClient databaseMsClient,
-                         MsClient frontendMsClient,
                          SimpMessageSendingOperations messaging,
                          FrontendService frontendService)
   {
     this.messageSystem = messageSystem;
-    this.databaseMsClient = databaseMsClient;
-    this.frontendMsClient = frontendMsClient;
     this.messaging = messaging;
     this.frontendService = frontendService;
-  }
-
-
-  @Autowired
-  public void setupDatabaseMsClient(RequestHandler createUserRequestHandler,
-                                    RequestHandler getAllUsersDataRequestHandler)
-  {
-    databaseMsClient
-        .addHandler(MessageType.USER_DATA, createUserRequestHandler)
-        .addHandler(MessageType.USERS_LIST, getAllUsersDataRequestHandler);
-  }
-
-  @Autowired
-  public void setupFrontendMsClient(RequestHandler createUserResponseHandler,
-                                   RequestHandler getAllUsersDataResponseHandler,
-                                   RequestHandler errorHandler)
-  {
-    frontendMsClient
-        .addHandler(MessageType.USER_DATA, createUserResponseHandler)
-        .addHandler(MessageType.USERS_LIST, getAllUsersDataResponseHandler)
-        .addHandler(MessageType.ERRORS, errorHandler);
-  }
-
-  @PostConstruct
-  public void setupMessageSystem() {
-    messageSystem.addClient(databaseMsClient);
-    messageSystem.addClient(frontendMsClient);
   }
 
   @MessageMapping({"/", "/admin"})

@@ -1,5 +1,6 @@
 package ru.otus.HW28MessageSystem;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,5 +45,35 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Bean(name = "databaseMsClient")
   public MsClient databaseMsClient(MessageSystem messageSystem) {
     return new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem);
+  }
+
+  @Autowired
+  public void setupDatabaseMsClient(MsClient databaseMsClient,
+                                    RequestHandler createUserRequestHandler,
+                                    RequestHandler getAllUsersDataRequestHandler)
+  {
+    databaseMsClient
+        .addHandler(MessageType.USER_DATA, createUserRequestHandler)
+        .addHandler(MessageType.USERS_LIST, getAllUsersDataRequestHandler);
+  }
+
+  @Autowired
+  public void setupFrontendMsClient(MsClient frontendMsClient,
+                                    RequestHandler createUserResponseHandler,
+                                    RequestHandler getAllUsersDataResponseHandler,
+                                    RequestHandler errorHandler)
+  {
+    frontendMsClient
+        .addHandler(MessageType.USER_DATA, createUserResponseHandler)
+        .addHandler(MessageType.USERS_LIST, getAllUsersDataResponseHandler)
+        .addHandler(MessageType.ERRORS, errorHandler);
+  }
+
+  @Autowired
+  public void setupMessageSystem(MessageSystem messageSystem,
+                                 MsClient databaseMsClient,
+                                 MsClient frontendMsClient) {
+    messageSystem.addClient(databaseMsClient);
+    messageSystem.addClient(frontendMsClient);
   }
 }
