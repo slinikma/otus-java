@@ -6,36 +6,40 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class MyCache<K, V> implements Cache {
+public class MyCache<K, V> implements Cache<K, V> {
 
-  private final Map cache = new WeakHashMap();
+  private final Map<K, V> cache = new WeakHashMap();
   private final Collection<WeakReference<CacheListener>> listeners = new HashSet<>();
 
   @Override
-  public void put(Object key, Object value) {
-    if (!cache.containsKey(key)) {
-      cache.put(key, value);
-      for (var listener : listeners) {
+  public void put(K key, V value) {
+    cache.put(key, value);
+    for (var listener : listeners) {
+      if (listener != null) {
         listener.get().notify(key, value, "put");
       }
     }
   }
 
   @Override
-  public void remove(Object key) {
+  public void remove(K key) {
     if (cache.containsKey(key)) {
       for (var listener : listeners) {
-        listener.get().notify(key, cache.get(key), "remove");
+        if (listener != null) {
+          listener.get().notify(key, cache.get(key), "remove");
+        }
       }
     }
     cache.remove(key);
   }
 
   @Override
-  public Object get(Object key) {
+  public V get(K key) {
     if (cache.containsKey(key)) {
         for (var listener : listeners) {
-          listener.get().notify(key, cache.get(key), "get");
+          if (listener != null) {
+            listener.get().notify(key, cache.get(key), "get");
+          }
         }
         return cache.get(key);
     }

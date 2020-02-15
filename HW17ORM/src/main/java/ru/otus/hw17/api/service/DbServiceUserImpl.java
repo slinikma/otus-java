@@ -15,12 +15,12 @@ public class DbServiceUserImpl implements DBServiceUser {
   private static Logger logger = LoggerFactory.getLogger(DbServiceUserImpl.class);
 
   private final UserDao userDao;
-  private final Cache<Long, User> cache;
+  private final Cache<String, User> cache;
 
   public DbServiceUserImpl(UserDao userDao) {
     this.userDao = userDao;
 
-    CacheListener<Long, User> сacheListener =
+    CacheListener<String, User> сacheListener =
         (key, value, action) -> logger.info("key:{}, value:{}, action: {}",  key, value, action);
     cache = new MyCache();
     cache.addListener(сacheListener);
@@ -34,10 +34,8 @@ public class DbServiceUserImpl implements DBServiceUser {
         long id = userDao.saveUser(user);
         sessionManager.commitSession();
 
-        // Кладём объект в кэш
-        // ID - новый объект на который не ссылаются StrongReferences
-        // TODO: (возможно стоит вынести на уровень реализации самого кэша)
-        cache.put(new Long(user.getId()), user);
+        // Кладём объект в кеш
+        cache.put(String.valueOf(user.getId()), user);
 
         return id;
       } catch (Exception e) {
@@ -55,6 +53,9 @@ public class DbServiceUserImpl implements DBServiceUser {
       try {
         userDao.updateUser(user);
         sessionManager.commitSession();
+
+        // Обновляем объект в кеше
+        cache.put(String.valueOf(user.getId()), user);
       } catch (Exception e) {
         logger.error(e.getMessage(), e);
         sessionManager.rollbackSession();
@@ -68,7 +69,7 @@ public class DbServiceUserImpl implements DBServiceUser {
   public Optional<User> getUser(long id) {
 
     // Если есть в кэше, возвращаем из него
-    User user = cache.get(id);
+    User user = cache.get(String.valueOf(id));
     if (user != null) {
       return Optional.ofNullable(user);
     }
@@ -77,6 +78,9 @@ public class DbServiceUserImpl implements DBServiceUser {
       sessionManager.beginSession();
       try {
         Optional<User> userOptional = userDao.getUser(id);
+
+        // Обновляем объект в кеше, т.к. был обращение
+        cache.put(String.valueOf(userOptional.get().getId()), userOptional.get());
 
         logger.info("user: {}", userOptional.orElse(null));
         return userOptional;

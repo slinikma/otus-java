@@ -44,11 +44,11 @@ public class CacheTest {
   }
 
   @RepeatedTest(3)
-  @DisplayName(" [с кэшом] корректно загружать пользователя по заданному id из ООООЧЕНЬ медленной БД")
+  @DisplayName(" [с кешом] корректно загружать пользователя по заданному id из ООООЧЕНЬ медленной БД")
   void shouldLoadCorrectUserByIdWithCache() throws InterruptedException {
     User expectedUser = new User(USER_ID, "Вася");
 
-    // Т.к. кэш в сервисе, мокаем DAO
+    // Т.к. кеш в сервисе, мокаем DAO
     given(userDao.getUser(anyLong())).will((Answer<Optional<User>>) invocationOnMock -> {
       Thread.sleep(5000);
       return Optional.ofNullable(expectedUser);
@@ -58,14 +58,14 @@ public class CacheTest {
   }
 
   @RepeatedTest(3)
-  @DisplayName(" [без кэша] корректно загружать пользователя по заданному id из ООООЧЕНЬ медленной БД")
+  @DisplayName(" [без кеша] корректно загружать пользователя по заданному id из ООООЧЕНЬ медленной БД")
   void shouldLoadCorrectUserByIdWithoutCache() throws InterruptedException {
     User expectedUser = new User(USER_ID, "Вася");
 
     System.gc();
     Thread.sleep(2000);
 
-    // Т.к. кэш в сервисе, мокаем DAO
+    // Т.к. кеш в сервисе, мокаем DAO
     given(userDao.getUser(anyLong())).will((Answer<Optional<User>>) invocationOnMock -> {
       Thread.sleep(5000);
       return Optional.ofNullable(expectedUser);
