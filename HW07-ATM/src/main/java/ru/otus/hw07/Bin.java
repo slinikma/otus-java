@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public class Bin {
   private @Getter Long amount;
-  private @Getter Coin coin; // TODO: можно и не хранить Coin, т.к. нужная фабрика ссылается на объект Bin-а
+  private @Getter Coin coin;
 
   public Bin(Coin coin, Long amount) {
     this.coin = coin;
