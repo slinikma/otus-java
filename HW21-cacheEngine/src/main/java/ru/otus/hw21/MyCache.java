@@ -112,7 +112,6 @@ public class MyCache<K, V> implements Cache<K, V> {
       hash = o.hashCode();
     }
 
-    // TODO: заменить Object на дженерик
     private static WeakElement create(CacheListener o) {
 
       //создаем Phantom Reference на объект типа BigObject и "подвязываем" ее на переменную a.
