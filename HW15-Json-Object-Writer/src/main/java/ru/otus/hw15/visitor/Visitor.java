@@ -1,13 +1,13 @@
 package ru.otus.hw15.visitor;
 
-import ru.otus.hw15.types.TraversedArray;
-import ru.otus.hw15.types.TraversedObject;
-import ru.otus.hw15.types.TraversedPrimitive;
-import ru.otus.hw15.types.TraversedString;
+import ru.otus.hw15.types.ArrayField;
+import ru.otus.hw15.types.ObjectField;
+import ru.otus.hw15.types.PrimitiveField;
+import ru.otus.hw15.types.StringField;
 
 public interface Visitor {
-  void visit(TraversedArray value) throws ClassNotFoundException, NoSuchMethodException;
-  void visit(TraversedPrimitive value) throws NoSuchMethodException;
-  void visit(TraversedObject value);
-  void visit(TraversedString value);
+  void visit(ArrayField value) throws ClassNotFoundException, NoSuchMethodException;
+  void visit(PrimitiveField value) throws NoSuchMethodException;
+  void visit(ObjectField value);
+  void visit(StringField value);
 }

@@ -5,8 +5,8 @@ import ru.otus.hw15.visitor.TraversedField;
 
 import java.lang.reflect.Field;
 
-public class TraversedObject extends TraversedField {
-  public TraversedObject(Field field) {
+public class ObjectField extends TraversedField {
+  public ObjectField(Field field) {
     super(field);
   }
 

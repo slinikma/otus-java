@@ -3,7 +3,6 @@ package ru.otus.hw15;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
