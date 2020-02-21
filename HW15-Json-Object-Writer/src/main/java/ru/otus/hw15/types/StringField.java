@@ -3,21 +3,22 @@ package ru.otus.hw15.types;
 import ru.otus.hw15.visitor.Visitor;
 import ru.otus.hw15.visitor.TraversedField;
 
+import javax.json.JsonObject;
 import javax.json.JsonValue;
 import java.lang.reflect.Field;
 
-public class TraversedString extends TraversedField {
+public class StringField extends TraversedField {
 
   String value;
 
-  public TraversedString(Field field, Object value) {
+  public StringField(Field field, Object value) {
     super(field);
     this.value = (String) value;
   }
 
   @Override
-  public void accept(Visitor visitor) {
-    visitor.visit(this);
+  public JsonObject accept(Visitor visitor) {
+    return visitor.visit(this);
   }
 
   public String get() {

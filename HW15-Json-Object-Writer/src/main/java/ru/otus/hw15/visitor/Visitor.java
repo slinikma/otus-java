@@ -1,13 +1,17 @@
 package ru.otus.hw15.visitor;
 
-import ru.otus.hw15.types.TraversedArray;
-import ru.otus.hw15.types.TraversedObject;
-import ru.otus.hw15.types.TraversedPrimitive;
-import ru.otus.hw15.types.TraversedString;
+import ru.otus.hw15.types.*;
+
+import javax.json.JsonObject;
+
 
 public interface Visitor {
-  void visit(TraversedArray value) throws ClassNotFoundException, NoSuchMethodException;
-  void visit(TraversedPrimitive value) throws NoSuchMethodException;
-  void visit(TraversedObject value);
-  void visit(TraversedString value);
+  JsonObject visit(ArrayFiled value) throws ClassNotFoundException, NoSuchMethodException;
+//  void visit(SetFiled value) throws ClassNotFoundException, NoSuchMethodException;
+  JsonObject visit(CollectionFiled value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException;
+  JsonObject visit(MapFiled value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException;
+  JsonObject visit(PrimitiveField value) throws NoSuchMethodException;
+  JsonObject visit(ObjectFiled value);
+  JsonObject visit(StringField value);
+  Object visit(Object value);
 }
