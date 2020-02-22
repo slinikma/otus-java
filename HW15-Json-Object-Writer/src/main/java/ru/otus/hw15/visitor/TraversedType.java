@@ -1,6 +1,7 @@
 package ru.otus.hw15.visitor;
 
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 
 public interface TraversedType {
   // Метод необходим для реализации двойной диспетчеризации или double dispatch
@@ -12,5 +13,5 @@ public interface TraversedType {
   //
   // Получается что я статически связал метод визитора с конкретным типом поля, но какой вызовется визитор - это
   // уже динамическое связывание ???
-  JsonObject accept(Visitor visitor) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException;
+  JsonValue accept(Visitor visitor) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException;
 }

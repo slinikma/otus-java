@@ -4,6 +4,7 @@ import ru.otus.hw15.visitor.Visitor;
 import ru.otus.hw15.visitor.TraversedField;
 
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import java.lang.reflect.Field;
 
 public class PrimitiveField extends TraversedField {
@@ -16,7 +17,7 @@ public class PrimitiveField extends TraversedField {
   }
 
   @Override
-  public JsonObject accept(Visitor visitor) throws NoSuchMethodException {
+  public JsonValue accept(Visitor visitor) throws NoSuchMethodException {
     return visitor.visit(this);
   }
 

@@ -17,7 +17,7 @@ public class StringField extends TraversedField {
   }
 
   @Override
-  public JsonObject accept(Visitor visitor) {
+  public JsonValue accept(Visitor visitor) {
     return visitor.visit(this);
   }
 
