@@ -34,13 +34,12 @@ public class Traverser {
     }
     return jsonObj.build();
   }
-  // TODO: object
+
   public static JsonValue fieldAnalyzer(Field field, Object object, Visitor service) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
 
 
     if (field.getType().isPrimitive()) {
       return new PrimitiveField(field, field.get(object)).accept(service);
-      // TODO: а можно сделать isAssignableFrom(Collection) и внутри пройтись итератором
       // https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 //      } else if (field.getType().isAssignableFrom(Set.class)) {
 //        new SetFiled(field, (Set) field.get(object)).accept(service);
@@ -63,7 +62,6 @@ public class Traverser {
   }
 
   public static JsonValue objectAnalyzer(Object object, Visitor service) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
-    // TODO: не должен сюда попадать для примитивов?
     if (Collection.class.isAssignableFrom(object.getClass())) {
       return new CollectionFiled(null, (Collection) object).accept(service);
     } else if (Map.class.isAssignableFrom(object.getClass())) {

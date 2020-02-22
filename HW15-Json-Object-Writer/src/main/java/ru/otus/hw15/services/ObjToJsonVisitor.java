@@ -34,7 +34,6 @@ public class ObjToJsonVisitor implements Visitor {
         } else if (Checker.isPrimitiveWrapper(arrElem)) {
           jsonArr.add(primitiveObjectToJsonValue(arrElem));
         } else {
-          // TODO: т.е. Collection + Map + Array
           jsonArr.add(Traverser.objectAnalyzer(arrElem, this));
         }
       }
@@ -48,7 +47,7 @@ public class ObjToJsonVisitor implements Visitor {
 //    var jsonArr = Json.createArrayBuilder();
 //
 //    Set set = value.getSet();
-//    // TODO: для String и Set, List, Map, Queue
+//
 //    for (var setElem : set) {
 //      if (setElem != null) {
 //        System.out.println("Class: " + setElem.getClass());
@@ -71,7 +70,7 @@ public class ObjToJsonVisitor implements Visitor {
     var jsonArr = Json.createArrayBuilder();
 
     Collection collection = value.getCollection();
-    // TODO: для String и Set, List, Map, Queue
+
     for (var collectionElem : collection) {
       if (collectionElem != null) {
         if (collectionElem.getClass().isPrimitive()) {
@@ -161,7 +160,6 @@ public class ObjToJsonVisitor implements Visitor {
     } else if (Double.class.equals(o.getClass())) {
       jsonValue = Json.createValue((Double) o);
     } else if (String.class.equals(o.getClass())) {
-      // TODO: должен ли стринг быть тут?
       jsonValue = Json.createValue((String) o);
     } else {
       throw new IllegalArgumentException();
