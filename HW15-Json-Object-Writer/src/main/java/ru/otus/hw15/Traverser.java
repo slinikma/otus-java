@@ -30,12 +30,12 @@ public class Traverser {
       if (Modifier.isStatic(field.getModifiers())) {
         continue;
       }
-      jsonObj.add(field.getName(), Traverser.fieldAnalyzer(field, object, service));
+      jsonObj.add(field.getName(), Traverser.analyzeField(field, object, service));
     }
     return jsonObj.build();
   }
 
-  public static JsonValue fieldAnalyzer(Field field, Object object, Visitor service) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
+  public static JsonValue analyzeField(Field field, Object object, Visitor service) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
 
 
     if (field.getType().isPrimitive()) {
@@ -61,7 +61,7 @@ public class Traverser {
 
   }
 
-  public static JsonValue objectAnalyzer(Object object, Visitor service) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
+  public static JsonValue analyzeObject(Object object, Visitor service) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
     if (Collection.class.isAssignableFrom(object.getClass())) {
       return new CollectionFiled(null, (Collection) object).accept(service);
     } else if (Map.class.isAssignableFrom(object.getClass())) {
@@ -69,7 +69,7 @@ public class Traverser {
     } else if (object.getClass().isArray()) {
       return new ArrayFiled(null, object).accept(service);
     } else {
-      return fieldAnalyzer(null, object, service);
+      return analyzeField(null, object, service);
     }
   }
 }

@@ -13,6 +13,5 @@ public interface Visitor {
   JsonArray visit(CollectionFiled value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException;
   JsonObject visit(MapFiled value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException;
   JsonValue visit(PrimitiveField value) throws NoSuchMethodException;
-  JsonObject visit(ObjectFiled value);
   JsonValue visit(StringField value);
 }

@@ -13,11 +13,6 @@ import java.util.Map;
 import ru.otus.hw15.misc.*;
 
 public class ObjToJsonVisitor implements Visitor {
-  private JsonObjectBuilder jsonCreated;
-
-  public ObjToJsonVisitor() {
-    jsonCreated = Json.createObjectBuilder();
-  }
 
   @Override
   public JsonValue visit(ArrayFiled value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException {
@@ -34,7 +29,7 @@ public class ObjToJsonVisitor implements Visitor {
         } else if (Checker.isPrimitiveWrapper(arrElem)) {
           jsonArr.add(primitiveObjectToJsonValue(arrElem));
         } else {
-          jsonArr.add(Traverser.objectAnalyzer(arrElem, this));
+          jsonArr.add(Traverser.analyzeObject(arrElem, this));
         }
       }
     }
@@ -78,7 +73,7 @@ public class ObjToJsonVisitor implements Visitor {
         } else if (Checker.isPrimitiveWrapper(collectionElem)) {
           jsonArr.add(primitiveObjectToJsonValue(collectionElem));
         } else {
-          jsonArr.add(Traverser.objectAnalyzer(collectionElem, this));
+          jsonArr.add(Traverser.analyzeObject(collectionElem, this));
         }
       }
     }
@@ -109,7 +104,7 @@ public class ObjToJsonVisitor implements Visitor {
         } else if (Checker.isPrimitiveWrapper(mapElem.getValue())) {
           jValue = primitiveObjectToJsonValue(mapElem.getValue());
         } else {
-          jValue = Traverser.objectAnalyzer(mapElem.getValue(), this);
+          jValue = Traverser.analyzeObject(mapElem.getValue(), this);
         }
       }
 
@@ -122,12 +117,6 @@ public class ObjToJsonVisitor implements Visitor {
   @Override
   public JsonValue visit(PrimitiveField value) {
     return primitiveObjectToJsonValue(value.get());
-  }
-
-  @Override
-  public JsonObject visit(ObjectFiled value) {
-    System.out.println("Not implemented!");
-    return null;
   }
 
   @Override
@@ -167,9 +156,4 @@ public class ObjToJsonVisitor implements Visitor {
 
     return jsonValue;
   }
-
-  public void printJson() {
-    System.out.println(jsonCreated.build());
-  }
-
 }
