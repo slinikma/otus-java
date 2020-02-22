@@ -37,28 +37,6 @@ public class ObjToJsonVisitor implements Visitor {
     return jsonArr.build();
   }
 
-//  @Override
-//  public void visit(SetFiled value) throws ClassNotFoundException, NoSuchMethodException {
-//    var jsonArr = Json.createArrayBuilder();
-//
-//    Set set = value.getSet();
-//
-//    for (var setElem : set) {
-//      if (setElem != null) {
-//        System.out.println("Class: " + setElem.getClass());
-//        System.out.println("IsPrimitive: " + setElem.getClass().isPrimitive());
-//        if (setElem.getClass().isPrimitive()) {
-//          new PrimitiveField(null, setElem).accept(this);
-//        } else if (setElem.getClass().isArray()) {
-//          new ArrayFiled(null, setElem).accept(this);
-//        } else if (Checker.isPrimitiveWrapper(setElem)) {
-//          jsonArr.add(setElem.toString());
-//        }
-//      }
-//    }
-//    System.out.println(jsonCreated.add(value.getName(), jsonArr));
-//  }
-
   @Override
   public JsonArray visit(CollectionFiled value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException {
 

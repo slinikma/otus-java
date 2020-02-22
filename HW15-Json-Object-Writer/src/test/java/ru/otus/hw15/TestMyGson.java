@@ -98,17 +98,4 @@ public class TestMyGson {
 
     assertEquals(gson.toJson(bagOfPrimitives), myGson.toJson(bagOfPrimitives));
   }
-
-//  @Test
-//  @DisplayName("Serialize json to object")
-//  public void SerializeJsonToObject() {
-//    var arr = new ArrayList<String>();
-//    arr.add("1");
-//    arr.add("2");
-////    var bagOfPrimitives = new BagOfPrimitives(22, "test", 10, arr, new int[]{1,3,4,5});
-////    var bagOfPrimitives = new BagOfPrimitives(new int[]{1,3,4,5});
-//    var bagOfPrimitivesJSON = "{\"value1\":22,\"value2\":\"test\",\"value3\":10}";
-//
-////    assertEquals(gson.fromJson(bagOfPrimitivesJSON, BagOfPrimitives.class) ,bagOfPrimitives);
-//  }
 }
