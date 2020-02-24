@@ -1,11 +1,13 @@
 -Xms128m -Xmx128m -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=70
 --------------------------------------------------------------------------------------------------------------------------------
+``````
 00:19:24.551 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0
 00:20:24.537 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 1, Time (ms): 111, MajorGC -> Count: 0, Time (ms): 0
 00:21:24.543 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 3, Time (ms): 186, MajorGC -> Count: 0, Time (ms): 0
 00:22:24.546 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 5, Time (ms): 402, MajorGC -> Count: 1, Time (ms): 15
 00:23:24.540 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 6, Time (ms): 406, MajorGC -> Count: 4, Time (ms): 173
 00:24:24.553 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 6, Time (ms): 406, MajorGC -> Count: 4, Time (ms): 173
+``````
 
 ## Вывод:
 ``````
@@ -15,12 +17,14 @@ CMS позывает минимальные значения задержки н
 
 -Xms128m -Xmx128m -XX:+UseParallelGC -XX:+UseParallelOldGC
 --------------------------------------------------------------------------------------------------------------------------------
+``````
 00:46:28.615 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0
 00:47:28.605 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 2, Time (ms): 127, MajorGC -> Count: 0, Time (ms): 0
 00:48:28.605 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 3, Time (ms): 191, MajorGC -> Count: 0, Time (ms): 0
 00:49:28.604 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 4, Time (ms): 287, MajorGC -> Count: 0, Time (ms): 0
 00:50:28.603 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 7, Time (ms): 715, MajorGC -> Count: 1, Time (ms): 315
 00:51:28.605 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 7, Time (ms): 715, MajorGC -> Count: 2, Time (ms): 510
+``````
 
 ## Вывод:
 ``````
@@ -31,6 +35,7 @@ ParallelGC  явно медленнее чем CMS и G1 как при сбор�
 
 -Xms128m -Xmx128m -XX:+UseG1GC -XX:InitiatingHeapOccupancyPercent=70
 --------------------------------------------------------------------------------------------------------------------------------
+``````
 01:05:03.217 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 1, Time (ms): 8, MajorGC -> Count: 0, Time (ms): 0
 01:06:03.210 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 3, Time (ms): 40, MajorGC -> Count: 0, Time (ms): 0
 01:07:03.207 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 4, Time (ms): 48, MajorGC -> Count: 0, Time (ms): 0
@@ -39,6 +44,7 @@ ParallelGC  явно медленнее чем CMS и G1 как при сбор�
 01:10:03.212 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 8, Time (ms): 88, MajorGC -> Count: 0, Time (ms): 0
 01:11:03.211 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 10, Time (ms): 101, MajorGC -> Count: 1, Time (ms): 256
 01:12:03.227 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 13, Time (ms): 127, MajorGC -> Count: 1, Time (ms): 256
+``````
 
 ## Вывод:
 ``````
@@ -47,12 +53,14 @@ G1 самый быстрый при сборке молодого поколен
 
 -Xms128m -Xmx128m -XX:+UseSerialGC
 --------------------------------------------------------------------------------------------------------------------------------
+``````
 01:22:04.508 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0
 01:23:04.499 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0, UnknownGC -> Count: 2, Time (ms): 115
 01:24:04.501 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0, UnknownGC -> Count: 3, Time (ms): 153
 01:25:04.504 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0, UnknownGC -> Count: 5, Time (ms): 345
 01:26:04.509 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0, UnknownGC -> Count: 7, Time (ms): 472
 01:27:04.507 [Timer-0] INFO  ru.otus.Benchmark - GC metrics: MinorGC -> Count: 0, Time (ms): 0, MajorGC -> Count: 0, Time (ms): 0, UnknownGC -> Count: 9, Time (ms): 632
+``````
 
 ## Вывод:
 ``````
