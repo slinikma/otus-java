@@ -26,6 +26,7 @@
       <module>HW03-DIY-ArrayList</module>
       <module>HW21-cacheEngine</module>
       <module>HW23-webServer</module>
+      <module>HW14-ATM-department</module>
     </modules>
 
   <properties>
