@@ -1,5 +1,8 @@
 package ru.otus.hw14.atm;
 
+import lombok.Getter;
+import ru.otus.hw14.memento.ATMBinsState;
+
 import java.util.Currency;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -14,6 +17,11 @@ public class USDBinFactory implements BinFactory {
 
     EnumSet.allOf(NominalsUSD.class).forEach(nominal ->
         bins.put(nominal, new Bin(new Coin(nominal, Currency.getInstance("USD")), amount)));
+  }
+
+  @Override
+  public Map<Nominals, Bin> getAllBins() {
+    return bins;
   }
 
   @Override

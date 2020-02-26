@@ -1,15 +1,23 @@
 package ru.otus.hw14.atm;
 
-import ru.otus.hw14.DepartmentObserver;
+import lombok.Getter;
+import ru.otus.hw14.Listener;
+import ru.otus.hw14.memento.ATMBinsState;
+import ru.otus.hw14.memento.StateOriginator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Currency;
 import java.util.EnumSet;
 
-public class ATM implements DepartmentObserver {
+public class ATM {
+
+  @Getter
+  private final Listener listener = cmd -> cmd.execute(this);
 
   private BinFactory binFactory;
+  private StateOriginator stateOriginator;
+  @Getter private String atmAddress;
 
   public static BinFactory makeFactory(Currency currency) {
     switch (currency.getCurrencyCode()) {
@@ -21,7 +29,10 @@ public class ATM implements DepartmentObserver {
   }
 
   public ATM(String address) {
-     this.binFactory = ATM.makeFactory(Currency.getInstance("USD"));
+    this.binFactory = ATM.makeFactory(Currency.getInstance("USD"));
+    this.atmAddress = address;
+    this.stateOriginator = new StateOriginator();
+    this.stateOriginator.saveState(new ATMBinsState(this.binFactory.getAllBins()));
   }
 
   public void withdrawMoney(BigDecimal requestedCash) {
@@ -43,6 +54,7 @@ public class ATM implements DepartmentObserver {
 
         if (requestedCash.compareTo(new BigDecimal(0)) == 0) {
           System.out.println("Cool! ATM gives you coins!");
+          this.stateOriginator.saveState(new ATMBinsState(this.binFactory.getAllBins()));
           return;
         }
       }  catch (ATMException e) {
@@ -58,28 +70,24 @@ public class ATM implements DepartmentObserver {
     try {
       this.binFactory.getBin(nominal).putCoins(amount);
       System.out.println("\n\nPutting " + amount + " USD coins with nominal " + nominal.getValue());
+      this.stateOriginator.saveState(new ATMBinsState(this.binFactory.getAllBins()));
     } catch (ATMException e) {
       System.out.println(e.getMessage());
     }
   }
 
-  public void printATMBalance() {
-    System.out.println("\n\nCurrent balance: " + this.getBalance());
+  public void printATMBalance()
+  {
+    System.out.println("\n\n" + this.getAtmAddress() + ":\nCurrent balance: " + this.getBalanceInfo());
   }
 
-  @Override
-  public String getAddress() {
-    return null;
-  }
-
-  @Override
-  public String getBalance() {
+  public String getBalanceInfo() {
 
     StringBuilder balanceInfo = new StringBuilder();
 
     EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
       try {
-        balanceInfo.append("ATM has " + this.binFactory.getBin(nominal).getAmount() + " coins with nominal " + nominal.getValue());
+        balanceInfo.append("\nATM has " + this.binFactory.getBin(nominal).getAmount() + " coins with nominal " + nominal.getValue());
       } catch (ATMException e) {
         System.out.println(e.getMessage());
       }
