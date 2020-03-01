@@ -8,11 +8,9 @@ public class RestoreBalanceCommand implements Command {
 
   @Override
   public void execute(ATM atm) {
-    // TODO: передаём массив состояний и проходимся по нему
-  }
-
-  @Override
-  public void undo() {
-    // TODO: два мементо? список комманд и список состояний?
+    while (atm.restorePreviousState()) {
+      System.out.println("[ATM at " + atm.getAtmAddress() + "] Previous state was restored!");
+      atm.printATMBalance();
+    }
   }
 }

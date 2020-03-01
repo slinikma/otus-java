@@ -29,6 +29,14 @@
       <module>HW14-ATM-department</module>
     </modules>
 
+  <repositories>
+    <repository>
+      <id>custom-repo</id>
+      <name>where gson-extras lives</name>
+      <url>https://artifactory.cronapp.io/public-release/</url>
+    </repository>
+  </repositories>
+
   <properties>
 
     <!--region General-->
@@ -101,6 +109,11 @@
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson-extras</artifactId>
         <version>${gson.version}</version>
       </dependency>
 

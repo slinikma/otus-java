@@ -1,13 +1,13 @@
 package ru.otus.hw14.memento;
 
 public class Memento {
-  private final ATMBinsState state;
+  private final ATMBinFactoryState state;
 
-  Memento(ATMBinsState state) {
-    this.state = new ATMBinsState(state);
+  Memento(ATMBinFactoryState state) {
+    this.state = new ATMBinFactoryState(state);
   }
 
-  ATMBinsState getState() {
+  ATMBinFactoryState getState() {
     return state;
   }
 }

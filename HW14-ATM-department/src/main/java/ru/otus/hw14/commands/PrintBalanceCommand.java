@@ -8,9 +8,4 @@ public class PrintBalanceCommand implements Command {
   public void execute(ATM atm) {
     atm.printATMBalance();
   }
-
-  @Override
-  public void undo() {
-    throw new UnsupportedOperationException("It's impossible to erase printed balance");
-  }
 }

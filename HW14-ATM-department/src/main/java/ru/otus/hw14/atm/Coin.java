@@ -4,22 +4,7 @@ import lombok.Getter;
 
 import java.util.Currency;
 
-public class Coin {
-  private @Getter
-  Nominals nominal;
-  private @Getter
-  Currency currency;
-
-  public Coin(Nominals nominal, Currency currency) {
-    this.nominal = nominal;
-    this.currency = currency;
-  }
-
-  public String getCoinInfo() {
-    return new StringBuilder().append("Nominal: ")
-        .append(nominal)
-        .append(" Currency: ")
-        .append(currency)
-        .toString();
-  }
+public abstract class Coin {
+  public abstract String getCoinInfo();
+  public abstract Currency getCurrency();
 }

@@ -1,15 +1,14 @@
 package ru.otus.hw14.atm;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class Bin {
-  private @Getter Long amount;
   private @Getter Coin coin;
-
-  public Bin(Coin coin, Long amount) {
-    this.coin = coin;
-    this.amount = amount;
-  }
+  private @Getter Long amount;
 
   public void putCoins(Long amount) {
     this.amount += amount;

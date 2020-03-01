@@ -3,6 +3,7 @@ package ru.otus.hw14.department;
 import ru.otus.hw14.EventProducer;
 import ru.otus.hw14.atm.ATM;
 import ru.otus.hw14.commands.PrintBalanceCommand;
+import ru.otus.hw14.commands.RestoreBalanceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,11 @@ public class ATMDepartment {
 
   public void printAllATMBalance() {
     var command = new PrintBalanceCommand();
+    eventProducer.event(command);
+  }
+
+  public void restoreAllATMBalance() {
+    var command = new RestoreBalanceCommand();
     eventProducer.event(command);
   }
 }

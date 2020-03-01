@@ -1,5 +1,7 @@
 package ru.otus.hw14.atm;
 
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
