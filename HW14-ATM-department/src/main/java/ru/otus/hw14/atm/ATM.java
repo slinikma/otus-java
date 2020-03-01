@@ -52,7 +52,6 @@ public class ATM {
       try {
         Long availableCoins = this.binFactory.getBin(nominal).withdrawAAvailableCoins(requestedCoins);
 
-        // TODO: можно сделать лист всех купюр, которые собираемся выдать
         if (availableCoins > 0) {
           coins.put(new CoinUSD(nominal), availableCoins);
           System.out.println("[ATM at " + atmAddress + "] want to give you " + availableCoins + " coins with nominal " + nominal.getValue());
