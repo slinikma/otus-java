@@ -26,7 +26,16 @@
       <module>HW03-DIY-ArrayList</module>
       <module>HW21-cacheEngine</module>
       <module>HW23-webServer</module>
+      <module>HW14-ATM-department</module>
     </modules>
+
+  <repositories>
+    <repository>
+      <id>custom-repo</id>
+      <name>where gson-extras lives</name>
+      <url>https://artifactory.cronapp.io/public-release/</url>
+    </repository>
+  </repositories>
 
   <properties>
 
@@ -97,8 +106,14 @@
         <version>${lombok.version}</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson-extras</artifactId>
         <version>${gson.version}</version>
       </dependency>
 
