@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.otus.hw14.atm.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +21,7 @@ public class AtmTest {
     myAtm = new ATM("Pushkina st.");
 
     EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      atmDefaultBalance.add(new BigDecimal(1000L).multiply(nominal.getValue()));
+      atmDefaultBalance = atmDefaultBalance.add(new BigDecimal(1000L).multiply(nominal.getValue())).setScale(2, RoundingMode.HALF_EVEN);
     });
   }
 
@@ -32,13 +33,7 @@ public class AtmTest {
     myAtm.withdrawMoney(BigDecimal.valueOf(0.45));
     myAtm.withdrawMoney(BigDecimal.valueOf(1));
 
-    BigDecimal myAtmTotal = new BigDecimal(0);
-    // TODO: можно в метод ATM вынести
-    EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      myAtmTotal.add(new BigDecimal(myAtm.getBalanceMap().get(new CoinUSD(nominal))).multiply(nominal.getValue()));
-    });
-
-    assertEquals(atmDefaultBalance.subtract(new BigDecimal(1246 + 0.45 + 1)), myAtmTotal);
+    assertEquals(atmDefaultBalance.subtract(new BigDecimal(1246 + 0.45 + 1)).setScale(2, RoundingMode.HALF_EVEN), myAtm.getTotalCash());
 
     myAtm.printATMBalance();
   }
@@ -49,7 +44,7 @@ public class AtmTest {
   }
 
   @Test
-  public void putMoney() {
+  public void putMoney() throws ATMException {
     myAtm.printATMBalance();
 
     myAtm.replenish(NominalsUSD.DOLLAR, 10L);
@@ -57,13 +52,7 @@ public class AtmTest {
     myAtm.replenish(NominalsUSD.HUNDRED_DOLLARS, 11L);
     myAtm.replenish(NominalsUSD.DIME, 2L);
 
-    BigDecimal myAtmTotal = new BigDecimal(0);
-    // TODO: можно в метод ATM вынести
-    EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      myAtmTotal.add(new BigDecimal(myAtm.getBalanceMap().get(new CoinUSD(nominal))).multiply(nominal.getValue()));
-    });
-
-    assertEquals(atmDefaultBalance.add(new BigDecimal(10 + 0.15 + 1100 + 0.20)), myAtmTotal);
+    assertEquals(atmDefaultBalance.add(new BigDecimal(10 + 0.15 + 1100 + 0.20)).setScale(2, RoundingMode.HALF_EVEN), myAtm.getTotalCash());
 
     myAtm.printATMBalance();
   }

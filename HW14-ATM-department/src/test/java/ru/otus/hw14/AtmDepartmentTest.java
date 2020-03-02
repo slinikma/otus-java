@@ -6,6 +6,7 @@ import ru.otus.hw14.atm.*;
 import ru.otus.hw14.department.ATMDepartment;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +28,7 @@ public class AtmDepartmentTest {
     EnumSet.allOf(NominalsUSD.class).forEach(nominal -> atmFullCompare.put(new CoinUSD(nominal), 1000L));
 
     EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      atmDefaultBalance.add(new BigDecimal(1000L).multiply(nominal.getValue()));
+      atmDefaultBalance = atmDefaultBalance.add(new BigDecimal(1000L).multiply(nominal.getValue())).setScale(2, RoundingMode.HALF_EVEN);
     });
 
     myAtm1 = new ATM("Pushkina st");
@@ -73,42 +74,21 @@ public class AtmDepartmentTest {
     myAtm1.withdrawMoney(new BigDecimal(32352.21));
     myAtm1.withdrawMoney(new BigDecimal(123));
 
-    BigDecimal myAtm1Total = new BigDecimal(0);
-    // TODO: можно в метод ATM вынести
-    EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      myAtm1Total.add(new BigDecimal(myAtm1.getBalanceMap().get(new CoinUSD(nominal))).multiply(nominal.getValue()));
-    });
-
-    assertEquals(atmDefaultBalance.subtract(new BigDecimal(32352.21 + 123)), myAtm1Total);
+    assertEquals(atmDefaultBalance.subtract(new BigDecimal(32352.21 + 123)).setScale(2, RoundingMode.HALF_EVEN), myAtm1.getTotalCash());
 
     myAtm2.withdrawMoney(new BigDecimal(1233));
     myAtm2.withdrawMoney(new BigDecimal(552.11));
 
-    BigDecimal myAtm2Total = new BigDecimal(0);
-    EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      myAtm2Total.add(new BigDecimal(myAtm2.getBalanceMap().get(new CoinUSD(nominal))).multiply(nominal.getValue()));
-    });
-
-    assertEquals(atmDefaultBalance.subtract(new BigDecimal(1233 + 552.11)), myAtm1Total);
+    assertEquals(atmDefaultBalance.subtract(new BigDecimal(1233 + 552.11)).setScale(2, RoundingMode.HALF_EVEN), myAtm2.getTotalCash());
 
     myAtm3.withdrawMoney(new BigDecimal(1203));
     myAtm3.withdrawMoney(new BigDecimal(51.55));
 
-    BigDecimal myAtm3Total = new BigDecimal(0);
-    EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      myAtm3Total.add(new BigDecimal(myAtm3.getBalanceMap().get(new CoinUSD(nominal))).multiply(nominal.getValue()));
-    });
-
-    assertEquals(atmDefaultBalance.subtract(new BigDecimal(1203 + 51.55)), myAtm1Total);
+    assertEquals(atmDefaultBalance.subtract(new BigDecimal(1203 + 51.55)).setScale(2, RoundingMode.HALF_EVEN), myAtm3.getTotalCash());
 
     myAtm4.withdrawMoney(new BigDecimal(244));
     myAtm4.withdrawMoney(new BigDecimal(425.23));
 
-    BigDecimal myAtm4Total = new BigDecimal(0);
-    EnumSet.allOf(NominalsUSD.class).forEach(nominal -> {
-      myAtm1Total.add(new BigDecimal(myAtm4.getBalanceMap().get(new CoinUSD(nominal))).multiply(nominal.getValue()));
-    });
-
-    assertEquals(atmDefaultBalance.subtract(new BigDecimal(244 + 425.23)), myAtm1Total);
+    assertEquals(atmDefaultBalance.subtract(new BigDecimal(244 + 425.23)).setScale(2, RoundingMode.HALF_EVEN), myAtm4.getTotalCash());
   }
 }

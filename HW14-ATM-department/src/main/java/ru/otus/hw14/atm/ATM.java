@@ -44,10 +44,10 @@ public class ATM {
 
     Map<Coin, Long> coins = new HashMap<>();
 
-    System.out.println("\n\n[ATM at " + atmAddress + "] Withdraw " + requestedCash.setScale(2, RoundingMode.DOWN) + " USD");
+    System.out.println("\n\n[ATM at " + atmAddress + "] Withdraw " + requestedCash.setScale(2, RoundingMode.HALF_EVEN) + " USD");
 
     for (NominalsUSD nominal : EnumSet.allOf(NominalsUSD.class)) {
-      long requestedCoins = requestedCash.divide(nominal.getValue(), RoundingMode.DOWN).setScale(2, RoundingMode.DOWN).longValue();
+      long requestedCoins = requestedCash.divide(nominal.getValue(), RoundingMode.HALF_EVEN).setScale(2, RoundingMode.HALF_EVEN).longValue();
 
       try {
         Long availableCoins = this.binFactory.getBin(nominal).withdrawAAvailableCoins(requestedCoins);
@@ -57,7 +57,7 @@ public class ATM {
           System.out.println("[ATM at " + atmAddress + "] want to give you " + availableCoins + " coins with nominal " + nominal.getValue());
         }
 
-        requestedCash = requestedCash.setScale(2, RoundingMode.DOWN).subtract(nominal.getValue().multiply(new BigDecimal(availableCoins)));
+        requestedCash = requestedCash.setScale(2, RoundingMode.HALF_EVEN).subtract(nominal.getValue().multiply(new BigDecimal(availableCoins)));
 
         if (requestedCash.compareTo(new BigDecimal(0)) == 0) {
           System.out.println("Cool! " + "[ATM at " + atmAddress + "] gives you coins!");
@@ -116,6 +116,16 @@ public class ATM {
     });
 
     return coins;
+  }
+
+  public BigDecimal getTotalCash() throws ATMException {
+
+    BigDecimal sum = new BigDecimal(0);
+
+    for (NominalsUSD nominal : EnumSet.allOf(NominalsUSD.class)) {
+      sum = sum.add(new BigDecimal(binFactory.getBin(nominal).getAmount()).multiply(nominal.getValue())).setScale(2, RoundingMode.HALF_EVEN);
+    }
+    return sum;
   }
 
   public Boolean restorePreviousState() {
