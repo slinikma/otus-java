@@ -18,10 +18,16 @@ import ru.otus.HW28MessageSystem.messagesystem.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-  @Value("${spring.frontend_service.name}")
-  private String FRONTEND_SERVICE_CLIENT_NAME;
-  @Value("${spring.database_service.name}")
-  private String DATABASE_SERVICE_CLIENT_NAME;
+  private String fronted_service_client_name;
+  private String database_service_client_name;
+
+  public WebSocketConfig (
+      @Value("${spring.frontend_service.name}") final String fronted_service_client_name,
+      @Value("${spring.database_service.name}") final String database_service_client_name
+  ) {
+    this.fronted_service_client_name = fronted_service_client_name;
+    this.database_service_client_name = database_service_client_name;
+  }
 
   @Override
   public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -38,35 +44,25 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Lazy
   @Bean(name = "frontendMsClient")
-  public MsClient frontendMsClient(MessageSystem messageSystem) {
-    return new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem);
-  }
-
-  @Bean(name = "databaseMsClient")
-  public MsClient databaseMsClient(MessageSystem messageSystem) {
-    return new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem);
-  }
-
-  @Autowired
-  public void setupDatabaseMsClient(MsClient databaseMsClient,
-                                    RequestHandler createUserRequestHandler,
-                                    RequestHandler getAllUsersDataRequestHandler)
+  public MsClient frontendMsClient(MessageSystem messageSystem,
+                                   RequestHandler createUserResponseHandler,
+                                   RequestHandler getAllUsersDataResponseHandler,
+                                   RequestHandler errorHandler)
   {
-    databaseMsClient
-        .addHandler(MessageType.USER_DATA, createUserRequestHandler)
-        .addHandler(MessageType.USERS_LIST, getAllUsersDataRequestHandler);
-  }
-
-  @Autowired
-  public void setupFrontendMsClient(MsClient frontendMsClient,
-                                    RequestHandler createUserResponseHandler,
-                                    RequestHandler getAllUsersDataResponseHandler,
-                                    RequestHandler errorHandler)
-  {
-    frontendMsClient
+    return new MsClientImpl(fronted_service_client_name, messageSystem)
         .addHandler(MessageType.USER_DATA, createUserResponseHandler)
         .addHandler(MessageType.USERS_LIST, getAllUsersDataResponseHandler)
         .addHandler(MessageType.ERRORS, errorHandler);
+  }
+
+  @Bean(name = "databaseMsClient")
+  public MsClient databaseMsClient(MessageSystem messageSystem,
+                                   RequestHandler createUserRequestHandler,
+                                   RequestHandler getAllUsersDataRequestHandler)
+  {
+    return new MsClientImpl(database_service_client_name, messageSystem)
+        .addHandler(MessageType.USER_DATA, createUserRequestHandler)
+        .addHandler(MessageType.USERS_LIST, getAllUsersDataRequestHandler);
   }
 
   @Autowired

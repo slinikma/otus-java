@@ -6,18 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.otus.HW28MessageSystem.domain.User;
 import ru.otus.HW28MessageSystem.messagesystem.Message;
 import ru.otus.HW28MessageSystem.messagesystem.MessageType;
 import ru.otus.HW28MessageSystem.messagesystem.MsClient;
 
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-// Не можем сделать бином, т.к. MsClient не бин, а databaseServiceClientName хотим передать в конструктор
+
 @Service
 public class FrontendServiceImpl implements FrontendService {
   private static final Logger logger = LoggerFactory.getLogger(FrontendServiceImpl.class);
@@ -30,7 +30,7 @@ public class FrontendServiceImpl implements FrontendService {
   private String databaseServiceClientName;
 
   @Autowired
-  public FrontendServiceImpl(MsClient frontendMsClient) {
+  public FrontendServiceImpl(@Lazy MsClient frontendMsClient) {
     this.frontendMsClient = frontendMsClient;
   }
 
