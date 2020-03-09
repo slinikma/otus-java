@@ -23,6 +23,7 @@
     <modules>
       <module>HW01-maven</module>
       <module>HW03-DIY-ArrayList</module>
+      <module>HW21-cacheEngine</module>
     </modules>
 
   <properties>
@@ -36,7 +37,7 @@
     <!--endregion-->
 
     <!--region BOMs -->
-    <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+    <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
     <!--endregion-->
 
     <!--region Libs -->
@@ -47,7 +48,7 @@
     <junit-jupiter.version>5.3.2</junit-jupiter.version>
     <assertj.version>3.12.2</assertj.version>
     <!--endregion-->
-    
+
     <!--region Plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -59,6 +60,16 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <!--region BOMs-->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!--endregion-->
 
       <dependency>
         <groupId>com.google.guava</groupId>

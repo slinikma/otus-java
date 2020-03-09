@@ -20,8 +20,6 @@ public class SelectByIdQueryBuilder implements Visitor {
   @Getter private List<TraversedField> fieldList;
   @Getter private String idFieldName = null;
   @Getter private Object idFieldValue = null;
-  @Getter private Constructor classConstructor = null;
-  @Getter private String className = null;
 
   // Сохраняем производные от разобранного класса
   private StringBuilder query;
@@ -48,16 +46,6 @@ public class SelectByIdQueryBuilder implements Visitor {
 
     if (field.isAnnotationPresent(Id.class)) {
       throw new IllegalArgumentException("Array can't be an field id!");
-    }
-
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
     }
 
     // Формируем SQL запрос
@@ -88,16 +76,6 @@ public class SelectByIdQueryBuilder implements Visitor {
       this.idFieldValue = field.getBoxedPrimitive();
     }
 
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
-
     // Формируем SQL запрос
     if (isCommaNeeded) {
       query.append(",");
@@ -120,15 +98,7 @@ public class SelectByIdQueryBuilder implements Visitor {
     // Сохраняем поля
     fieldList.add(field);
 
-    // Сложное не примитивное поле, которое должно быть ссылкой на другую таблицу.
-    // Выходит за рамки ДЗ
-    if (className == null) {
-      // Сохраняем имя класса
-      className = field.getFieldOfObject().getClass().getSimpleName();
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    } else {
-      throw new UnsupportedOperationException("Object fields unsupported!");
-    }
+    throw new UnsupportedOperationException("Object fields unsupported!");
   }
 
   @Override
@@ -148,16 +118,6 @@ public class SelectByIdQueryBuilder implements Visitor {
       this.idFieldValue = field.getValue();
     }
 
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
-
     // Формируем SQL запрос
     if (isCommaNeeded) {
       query.append(",");
@@ -171,7 +131,7 @@ public class SelectByIdQueryBuilder implements Visitor {
 
   public String getQueryString() {
     query.append(" from ")
-        .append(className)
+        .append(fieldList.get(0).getClassName())
         .append(" where ")
         .append(this.idFieldName)
         .append(" = ?");

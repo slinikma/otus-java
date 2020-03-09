@@ -43,12 +43,17 @@ public class AccountDbJdbcServiceTest {
 
   @Test
   @DisplayName("> Добавлять нового пользователя из объекта класса Account ...")
-  void shouldCreateAccount() {
+  void shouldCreateAccount() throws InterruptedException {
+    
     Account expectedAccount1 = new Account("Credit", 123);
     Account expectedAccount2 = new Account("Debit", 1234);
     Account expectedAccount3 = new Account("Супер-пупер", 12345);
 
     long accountId1 = dbServiceAccount.saveAccount(expectedAccount1);
+
+    System.gc();
+    Thread.sleep(5000);
+
     long accountId2 = dbServiceAccount.saveAccount(expectedAccount2);
     long accountId3 = dbServiceAccount.saveAccount(expectedAccount3);
 

@@ -10,5 +10,6 @@ public interface TraversedType {
   //
   // Получается что я статически связал метод визитора с конкретным типом поля, но какой вызовется визитор - это
   // уже динамическое связывание ???
-  void accept(Visitor visitor) throws ClassNotFoundException, NoSuchMethodException;
+  
+  TraversedType accept(Visitor visitor) throws ClassNotFoundException, NoSuchMethodException;
 }

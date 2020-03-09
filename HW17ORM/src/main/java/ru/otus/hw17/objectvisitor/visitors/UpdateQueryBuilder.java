@@ -23,8 +23,6 @@ public class UpdateQueryBuilder implements Visitor {
   @Getter private List<TraversedField> fieldList;
   @Getter private String idFieldName = null;
   @Getter private Object idFieldValue = null;
-  @Getter private Constructor classConstructor = null;
-  @Getter private String className = null;
 
   // Сохраняем производные от разобранного класса
   @Getter private List<Object> params;
@@ -46,16 +44,6 @@ public class UpdateQueryBuilder implements Visitor {
 
     // Сохраняем поля
     fieldList.add(field);
-
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
 
     if (field.isAnnotationPresent(Id.class)) {
       throw new IllegalArgumentException("Array can't be an field id!");
@@ -86,16 +74,6 @@ public class UpdateQueryBuilder implements Visitor {
 
     // Сохраняем поля
     fieldList.add(field);
-
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
 
     // Формируем SQL запрос
     if (!isTableSet) {
@@ -132,8 +110,6 @@ public class UpdateQueryBuilder implements Visitor {
     // Сложное не примитивное поле, которое должно быть ссылкой на другую таблицу.
     // Выходит за рамки ДЗ
     if (!isTableSet) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
       query.append(field.getFieldOfObject().getClass().getSimpleName())
           .append(" set ");
       isTableSet = true;
@@ -147,16 +123,6 @@ public class UpdateQueryBuilder implements Visitor {
 
     // Сохраняем поля
     fieldList.add(field);
-
-    // Сохраняем имя класса
-    if (className == null) {
-      className = field.getFieldOfObject().getClass().getSimpleName();
-    }
-
-    // Сохраняем конструктор
-    if (classConstructor == null) {
-      classConstructor = field.getFieldOfObject().getClass().getConstructor();
-    }
 
     // Формируем SQL запрос
     if (!isTableSet) {

@@ -21,6 +21,7 @@ public class UserDaoHibernate implements UserDao {
 
   @Override
   public Optional<User> getUser(long id) {
+
     DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
     try {
       return Optional.ofNullable(currentSession.getSession().find(User.class, id));
@@ -37,14 +38,16 @@ public class UserDaoHibernate implements UserDao {
       Session hibernateSession = currentSession.getSession();
       // Если ID у User задан, тогда пользователь уже отсоединён от контекста и находится в состоянии detached
       // Следовательно, мы делаем merge
-      if (((User) user).getId() > 0) {
+
+      if (user.getId() > 0) {
         hibernateSession.merge(user);
         // Иначе, пользователь ещё не в базе, т.е. ещё не был присоединён к сессии и находится в состояние transient
         // Следовательно делаем persist
       } else {
         hibernateSession.persist(user);
       }
-      return ((User) user).getId();
+      
+      return user.getId();
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new UserDaoException(e);
