@@ -16,19 +16,14 @@ public class MyCache<K, V> implements Cache<K, V> {
 
   private static final Logger logger = LoggerFactory.getLogger(MyCache.class);
 
-  private final Map<K, V> cache = new WeakHashMap();
+  private final Map<K, V> cache = new WeakHashMap<>();
   private final Collection<WeakReference<CacheListener>> listeners = new HashSet<>();
   //создаем очередь ReferenceQueue
   private static ReferenceQueue<CacheListener> refQueue = new ReferenceQueue<>();
 
   @Override
   public void put(K key, V value) {
-    Reference<? extends CacheListener> removedListenerRef;
-    while ((removedListenerRef = refQueue.poll()) != null) {
-      logger.info("Ref queue poll: {}", removedListenerRef);
-      this.removeListener(removedListenerRef.get());
-    }
-
+    cleanupUnusedListenerRefs();
     cache.put(key, value);
     for (var listener : listeners) {
       CacheListener<K,V> lst = listener.get();
@@ -40,12 +35,7 @@ public class MyCache<K, V> implements Cache<K, V> {
 
   @Override
   public void remove(K key) {
-    Reference<? extends CacheListener> removedListenerRef;
-    while ((removedListenerRef = refQueue.poll()) != null) {
-      logger.info("Ref queue poll: {}", removedListenerRef);
-      this.removeListener(removedListenerRef.get());
-    }
-
+    cleanupUnusedListenerRefs();
     if (cache.containsKey(key)) {
       for (var listener : listeners) {
         CacheListener<K,V> lst = listener.get();
@@ -59,12 +49,7 @@ public class MyCache<K, V> implements Cache<K, V> {
 
   @Override
   public V get(K key) {
-    Reference<? extends CacheListener> removedListenerRef;
-    while ((removedListenerRef = refQueue.poll()) != null) {
-      logger.info("Ref queue poll: {}", removedListenerRef);
-      this.removeListener(removedListenerRef.get());
-    }
-
+    cleanupUnusedListenerRefs();
     if (cache.containsKey(key)) {
         for (var listener : listeners) {
           CacheListener<K,V> lst = listener.get();
@@ -79,12 +64,7 @@ public class MyCache<K, V> implements Cache<K, V> {
 
   @Override
   public void addListener(CacheListener listener) {
-    Reference<? extends CacheListener> removedListenerRef;
-    while ((removedListenerRef = refQueue.poll()) != null) {
-      logger.info("Ref queue poll: {}", removedListenerRef);
-      this.removeListener(removedListenerRef.get());
-    }
-
+    cleanupUnusedListenerRefs();
     this.listeners.add(WeakElement.create(listener));
   }
 
@@ -97,12 +77,20 @@ public class MyCache<K, V> implements Cache<K, V> {
     return cache.size();
   }
 
+  private void cleanupUnusedListenerRefs() {
+    Reference<? extends CacheListener> removedListenerRef;
+    while ((removedListenerRef = refQueue.poll()) != null) {
+      logger.info("Ref queue poll: {}", removedListenerRef);
+      this.removeListener(removedListenerRef.get());
+    }
+  }
+
 
   // Понял, что удаление из моего HashSet не работает,
   // т.к. сильная ссылка на объект != слабой ссылке
   // WeakElement сохраняет hash исходной сильной ссылки (объекта?) и переопределяет equals
   // Данный кусочек кода подсмотрел
-  static private class WeakElement extends WeakReference {
+  static public class WeakElement extends WeakReference {
     private int hash; /* Hashcode of key, stored here since the key
                                may be tossed by the GC */
 
@@ -112,9 +100,9 @@ public class MyCache<K, V> implements Cache<K, V> {
       hash = o.hashCode();
     }
 
-    private static WeakElement create(CacheListener o) {
+    public static WeakElement create(CacheListener o) {
 
-      //создаем Phantom Reference на объект типа BigObject и "подвязываем" ее на переменную a.
+      //создаем Phantom Reference на объект типа CacheListener и "подвязываем" ее на переменную o
       PhantomReference<CacheListener> phantom = new PhantomReference<>(o, refQueue);
 
       return (o == null) ? null : new WeakElement(o);

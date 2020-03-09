@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.ref.WeakReference;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class CacheTest {
 
   private static final Logger logger = LoggerFactory.getLogger(CacheTest.class);
@@ -79,7 +84,7 @@ public class CacheTest {
   }
 
   @Test
-  void removeListeners() throws InterruptedException {
+  void removeListeners() {
     Cache<String, Long> cache = new MyCache<>();
     CacheListener<String, Long> listener1 =
         (key, value, action) -> logger.info("[Listener 1] key:{}, value:{}, action: {}",  key, value, action);
@@ -101,5 +106,16 @@ public class CacheTest {
 
     logger.info("After GC");
     cache.put("1", 123L);
+  }
+
+  @Test
+  // Из описания Collection remove()
+  // Удаляются элементы, которые Objects.equals(o, e)
+  void refsNotEquals() {
+    CacheListener<String, Long> listener =
+        (key, value, action) -> logger.info("[Listener 1] key:{}, value:{}, action: {}",  key, value, action);
+
+    // В случае без WeakElement, мы не удалим listener из ReferenceQueue, т.к. жесткая и слабые ссылки на объект не equals
+    assertFalse(Objects.equals(listener, new WeakReference<CacheListener>(listener)));
   }
 }
