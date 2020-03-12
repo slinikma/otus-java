@@ -7,8 +7,10 @@ import ru.otus.hw17.objectvisitor.Visitor;
 import java.lang.reflect.Field;
 
 public class ArrayField extends TraversedField {
-  @Getter private final Object array;
-  @Getter private Object fieldOfObject;
+  @Getter
+  private final Object array;
+  @Getter
+  private Object fieldOfObject;
 
   public ArrayField(Field field, Object obj) throws IllegalAccessException {
     super(field);

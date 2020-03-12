@@ -31,7 +31,6 @@ public class UserDaoJdbc implements UserDao {
       return dbExecutor.load(id, User.class, resultSet -> {
         try {
           if (resultSet.next()) {
-            // Можно сделать проще через new и передачу значений из resultSet через параметры, но я эксперементировал с рефлексией и визитором (:
             return Traverser.loadObjectFromResultSet(resultSet, User.class.getConstructor().newInstance());
           }
         } catch (SQLException | NoSuchMethodException | ObjectTraverseException e) {

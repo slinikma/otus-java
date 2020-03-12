@@ -10,7 +10,6 @@ import ru.otus.hw17.objectvisitor.visitors.InsertQueryBuilder;
 import ru.otus.hw17.objectvisitor.visitors.SelectByIdQueryBuilder;
 import ru.otus.hw17.objectvisitor.visitors.UpdateQueryBuilder;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.Optional;
 import java.util.function.Function;
@@ -18,7 +17,8 @@ import java.util.function.Function;
 public class DbExecutor<T> {
   private static Logger logger = LoggerFactory.getLogger(DbExecutor.class);
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private Connection connection;
 
   public long create(T objectData) throws ObjectTraverseException, SQLException {
@@ -28,8 +28,6 @@ public class DbExecutor<T> {
 
     Savepoint savePoint = connection.setSavepoint("savePointName");
     try (var prepareStatement = this.connection.prepareStatement(insertQueryBuilderService.getQueryString(), Statement.RETURN_GENERATED_KEYS)) {
-      // Цикл для замены '?' на параметры через PreparedStatement
-      // Тем самым защищаемся от SQL инъекций
       var params = insertQueryBuilderService.getParams();
       for (int i = 0; i < params.size(); i++) {
         prepareStatement.setObject(i + 1, params.get(i));
@@ -55,8 +53,6 @@ public class DbExecutor<T> {
 
     Savepoint savePoint = connection.setSavepoint("savePointName");
     try (var prepareStatement = this.connection.prepareStatement(updateQueryBuilderService.getQueryString())) {
-      // Заменяем '?' на ID PreparedStatement
-      // Тем самым защищаемся от SQL инъекций
       var params = updateQueryBuilderService.getParams();
       for (int i = 0; i < params.size(); i++) {
         prepareStatement.setObject(i + 1, params.get(i));
@@ -65,7 +61,6 @@ public class DbExecutor<T> {
 
       prepareStatement.executeUpdate();
 
-      // TODO: возможно, ID нужно возвращать из ResultSet ...
       return (Long) updateQueryBuilderService.getIdFieldValue();
     } catch (SQLException ex) {
       connection.rollback(savePoint);
@@ -74,8 +69,6 @@ public class DbExecutor<T> {
     }
   }
 
-  // TODO: почему в задании <T> generic метод + generic класс?
-  // Использую generic тип класса
   public Optional<T> load(long id, Class<? extends T> clazz, Function<ResultSet, T> rsHandler) throws SQLException, DbExecutorException {
 
     var selectByIdQueryBuilderService = new SelectByIdQueryBuilder();

@@ -7,8 +7,10 @@ import ru.otus.hw17.objectvisitor.Visitor;
 import java.lang.reflect.Field;
 
 public class StringField extends TraversedField {
-  @Getter private String value;
-  @Getter private Object fieldOfObject;
+  @Getter
+  private String value;
+  @Getter
+  private Object fieldOfObject;
 
   public StringField(Field field, Object obj) throws IllegalAccessException {
     super(field);

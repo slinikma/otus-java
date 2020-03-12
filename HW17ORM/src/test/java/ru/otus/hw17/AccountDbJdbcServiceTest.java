@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.hw17.api.dao.AccountDao;
-import ru.otus.hw17.api.model.myorm.Account;
+import ru.otus.hw17.api.model.Account;
 import ru.otus.hw17.api.service.DBServiceAccount;
 import ru.otus.hw17.api.service.DBServiceAccountImpl;
 import ru.otus.hw17.h2.DataSourceH2;
@@ -56,9 +56,9 @@ public class AccountDbJdbcServiceTest {
     Optional<Account> actualAccount2 = dbServiceAccount.getAccount(accountId2);
     Optional<Account> actualAccount3 = dbServiceAccount.getAccount(accountId3);
 
-    assertThat(actualAccount1).isNotEmpty().get() .hasFieldOrPropertyWithValue("type", expectedAccount1.getType());
-    assertThat(actualAccount2).isNotEmpty().get() .hasFieldOrPropertyWithValue("type", expectedAccount2.getType());
-    assertThat(actualAccount3).isNotEmpty().get() .hasFieldOrPropertyWithValue("type", expectedAccount3.getType());
+    assertThat(actualAccount1).isNotEmpty().get().hasFieldOrPropertyWithValue("type", expectedAccount1.getType());
+    assertThat(actualAccount2).isNotEmpty().get().hasFieldOrPropertyWithValue("type", expectedAccount2.getType());
+    assertThat(actualAccount3).isNotEmpty().get().hasFieldOrPropertyWithValue("type", expectedAccount3.getType());
   }
 
   @Test
@@ -84,9 +84,9 @@ public class AccountDbJdbcServiceTest {
     Optional<Account> actualAccount2 = dbServiceAccount.getAccount(accountId2);
     Optional<Account> actualAccount3 = dbServiceAccount.getAccount(accountId3);
 
-    assertThat(actualAccount1).isNotEmpty().get() .hasFieldOrPropertyWithValue("type", "Not Credit");
-    assertThat(actualAccount2).isNotEmpty().get() .hasFieldOrPropertyWithValue("type", "Not Debit");
-    assertThat(actualAccount3).isNotEmpty().get() .hasFieldOrPropertyWithValue("type", "НЕ Супер-пупер");
+    assertThat(actualAccount1).isNotEmpty().get().hasFieldOrPropertyWithValue("type", "Not Credit");
+    assertThat(actualAccount2).isNotEmpty().get().hasFieldOrPropertyWithValue("type", "Not Debit");
+    assertThat(actualAccount3).isNotEmpty().get().hasFieldOrPropertyWithValue("type", "НЕ Супер-пупер");
   }
 
   @Test

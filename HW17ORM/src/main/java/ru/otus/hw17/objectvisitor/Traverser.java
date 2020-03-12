@@ -1,6 +1,5 @@
 package ru.otus.hw17.objectvisitor;
 
-import ru.otus.hw17.annotations.TraverserSkip;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
 import ru.otus.hw17.objectvisitor.visitable.types.ObjectField;
 import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
@@ -22,10 +21,10 @@ public class Traverser {
 
   public static void traverse(Object object, Visitor service, Field rootField) throws ObjectTraverseException {
     // Обрабатываем сам объект и его поле, если указали
-    if (rootField != null && !rootField.isAnnotationPresent(TraverserSkip.class)) {
+    if (rootField != null) {
       try {
         if (object.getClass().isArray()) {
-            new ArrayField(rootField, object).accept(service);
+          new ArrayField(rootField, object).accept(service);
         } else {
           new ObjectField(rootField, object).accept(service);
         }
@@ -39,10 +38,6 @@ public class Traverser {
     // что-то вроде WeakHashMap<object.getClass(), List<TraversedField>>
     Field[] fields = object.getClass().getDeclaredFields();
     for (Field field : fields) {
-      // Пропускаем поля из ДЗ Hibernate
-      if (field.isAnnotationPresent(TraverserSkip.class)) {
-        continue;
-      }
 
       try {
         field.setAccessible(true);

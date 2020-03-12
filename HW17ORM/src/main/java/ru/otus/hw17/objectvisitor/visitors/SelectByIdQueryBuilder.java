@@ -2,7 +2,6 @@ package ru.otus.hw17.objectvisitor.visitors;
 
 import lombok.Getter;
 import ru.otus.hw17.annotations.MyOrmId;
-import ru.otus.hw17.annotations.TraverserSkip;
 import ru.otus.hw17.objectvisitor.TraversedField;
 import ru.otus.hw17.objectvisitor.Visitor;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
@@ -17,11 +16,16 @@ import java.util.List;
 public class SelectByIdQueryBuilder implements Visitor {
 
   // Сохраняем разобранный класс
-  @Getter private List<TraversedField> fieldList;
-  @Getter private String idFieldName = null;
-  @Getter private Object idFieldValue = null;
-  @Getter private Constructor classConstructor = null;
-  @Getter private String className = null;
+  @Getter
+  private List<TraversedField> fieldList;
+  @Getter
+  private String idFieldName = null;
+  @Getter
+  private Object idFieldValue = null;
+  @Getter
+  private Constructor classConstructor = null;
+  @Getter
+  private String className = null;
 
   // Сохраняем производные от разобранного класса
   private StringBuilder query;
@@ -37,11 +41,6 @@ public class SelectByIdQueryBuilder implements Visitor {
 
   @Override
   public void visit(ArrayField field) throws ClassNotFoundException, NoSuchMethodException {
-
-    // Пропускаем поля из ДЗ Hibernate
-    if (field.isAnnotationPresent(TraverserSkip.class)) {
-      return;
-    }
 
     // Сохраняем поля
     fieldList.add(field);
@@ -73,11 +72,6 @@ public class SelectByIdQueryBuilder implements Visitor {
 
   @Override
   public void visit(PrimitiveField field) throws NoSuchMethodException {
-
-    // Пропускаем поля из ДЗ Hibernate
-    if (field.isAnnotationPresent(TraverserSkip.class)) {
-      return;
-    }
 
     // Сохраняем поля
     fieldList.add(field);
@@ -112,11 +106,6 @@ public class SelectByIdQueryBuilder implements Visitor {
   @Override
   public void visit(ObjectField field) throws NoSuchMethodException {
 
-    // Пропускаем поля из ДЗ Hibernate
-    if (field.isAnnotationPresent(TraverserSkip.class)) {
-      return;
-    }
-
     // Сохраняем поля
     fieldList.add(field);
 
@@ -133,11 +122,6 @@ public class SelectByIdQueryBuilder implements Visitor {
 
   @Override
   public void visit(StringField field) throws NoSuchMethodException {
-
-    // Пропускаем поля из ДЗ Hibernate
-    if (field.isAnnotationPresent(TraverserSkip.class)) {
-      return;
-    }
 
     // Сохраняем поля
     fieldList.add(field);

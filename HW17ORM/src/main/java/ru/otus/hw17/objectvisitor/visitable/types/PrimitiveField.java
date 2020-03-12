@@ -7,8 +7,10 @@ import ru.otus.hw17.objectvisitor.Visitor;
 import java.lang.reflect.Field;
 
 public class PrimitiveField extends TraversedField {
-  @Getter private Object boxedPrimitive;
-  @Getter private Object fieldOfObject;
+  @Getter
+  private Object boxedPrimitive;
+  @Getter
+  private Object fieldOfObject;
 
   public PrimitiveField(Field field, Object obj) throws IllegalAccessException {
     super(field);

@@ -3,7 +3,7 @@ package ru.otus.hw17.api.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw17.api.dao.AccountDao;
-import ru.otus.hw17.api.model.myorm.Account;
+import ru.otus.hw17.api.model.Account;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 
 import java.util.Optional;

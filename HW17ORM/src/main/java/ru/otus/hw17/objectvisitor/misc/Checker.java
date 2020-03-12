@@ -15,8 +15,7 @@ public class Checker {
         clazz == Long.class ||
         clazz == Float.class ||
         clazz == Double.class ||
-        clazz == String.class)
-    {
+        clazz == String.class) {
       return true;
     }
     return false;

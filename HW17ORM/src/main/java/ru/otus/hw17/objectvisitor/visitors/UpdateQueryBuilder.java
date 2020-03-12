@@ -16,14 +16,20 @@ import java.util.List;
 public class UpdateQueryBuilder implements Visitor {
 
   // Сохраняем разобранный класс
-  @Getter private List<TraversedField> fieldList;
-  @Getter private String idFieldName = null;
-  @Getter private Object idFieldValue = null;
-  @Getter private Constructor classConstructor = null;
-  @Getter private String className = null;
+  @Getter
+  private List<TraversedField> fieldList;
+  @Getter
+  private String idFieldName = null;
+  @Getter
+  private Object idFieldValue = null;
+  @Getter
+  private Constructor classConstructor = null;
+  @Getter
+  private String className = null;
 
   // Сохраняем производные от разобранного класса
-  @Getter private List<Object> params;
+  @Getter
+  private List<Object> params;
   private StringBuilder query;
 
   private boolean isTableSet = false;

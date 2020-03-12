@@ -7,7 +7,8 @@ import ru.otus.hw17.objectvisitor.Visitor;
 import java.lang.reflect.Field;
 
 public class ObjectField extends TraversedField {
-  @Getter private Object fieldOfObject;
+  @Getter
+  private Object fieldOfObject;
 
   public ObjectField(Field field, Object obj) {
     super(field);
