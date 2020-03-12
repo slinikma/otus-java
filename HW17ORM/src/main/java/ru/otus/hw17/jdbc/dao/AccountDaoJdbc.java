@@ -3,6 +3,7 @@ package ru.otus.hw17.jdbc.dao;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.hw17.ObjectLoader;
 import ru.otus.hw17.api.dao.AccountDao;
 import ru.otus.hw17.api.dao.AccountDaoException;
 import ru.otus.hw17.api.model.Account;
@@ -32,7 +33,7 @@ public class AccountDaoJdbc implements AccountDao {
       return dbExecutor.load(id, Account.class, resultSet -> {
         try {
           if (resultSet.next()) {
-            return Traverser.loadObjectFromResultSet(resultSet, Account.class.getConstructor().newInstance());
+            return ObjectLoader.loadFromResultSet(resultSet, Account.class.getConstructor().newInstance());
           }
         } catch (SQLException | NoSuchMethodException | ObjectTraverseException e) {
           logger.error(e.getMessage(), e);

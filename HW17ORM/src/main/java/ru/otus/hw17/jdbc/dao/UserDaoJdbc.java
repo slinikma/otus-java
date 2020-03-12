@@ -3,6 +3,7 @@ package ru.otus.hw17.jdbc.dao;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.hw17.ObjectLoader;
 import ru.otus.hw17.api.dao.UserDao;
 import ru.otus.hw17.api.dao.UserDaoException;
 import ru.otus.hw17.api.model.User;
@@ -31,7 +32,7 @@ public class UserDaoJdbc implements UserDao {
       return dbExecutor.load(id, User.class, resultSet -> {
         try {
           if (resultSet.next()) {
-            return Traverser.loadObjectFromResultSet(resultSet, User.class.getConstructor().newInstance());
+            return ObjectLoader.loadFromResultSet(resultSet, User.class.getConstructor().newInstance());
           }
         } catch (SQLException | NoSuchMethodException | ObjectTraverseException e) {
           logger.error(e.getMessage(), e);

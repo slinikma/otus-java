@@ -4,20 +4,11 @@ import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
 import ru.otus.hw17.objectvisitor.visitable.types.ObjectField;
 import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
 import ru.otus.hw17.objectvisitor.visitable.types.StringField;
-import ru.otus.hw17.objectvisitor.visitors.ResultSetObjectLoader;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.sql.ResultSet;
 
 public class Traverser {
-
-  public static <T> T loadObjectFromResultSet(ResultSet resultSet, T object) throws ObjectTraverseException {
-    var resultSetObjectLoader = new ResultSetObjectLoader(resultSet);
-    traverse(object, resultSetObjectLoader, null);
-
-    return object;
-  }
 
   public static void traverse(Object object, Visitor service, Field rootField) throws ObjectTraverseException {
     // Обрабатываем сам объект и его поле, если указали
