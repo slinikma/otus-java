@@ -1,8 +1,7 @@
 package ru.otus.hw17.api.model.myorm;
 
-import com.sun.istack.NotNull;
 import lombok.*;
-import ru.otus.hw17.annotations.Id;
+import ru.otus.hw17.annotations.MyOrmId;
 
 /*
  * My ORM model
@@ -12,7 +11,8 @@ import ru.otus.hw17.annotations.Id;
 @NoArgsConstructor
 @ToString
 public class Account {
-  @Getter @Id private long no;
+  @Getter @MyOrmId
+  private long no;
   @Getter private String type;
   @Getter private int rest;
 

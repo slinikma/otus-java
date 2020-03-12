@@ -76,19 +76,13 @@ public class DbExecutor<T> {
 
   // TODO: почему в задании <T> generic метод + generic класс?
   // Использую generic тип класса
-  public Optional<T> load(long id, Class<? extends T> clazz, Function<ResultSet, T> rsHandler) throws SQLException, ObjectTraverseException {
+  public Optional<T> load(long id, Class<? extends T> clazz, Function<ResultSet, T> rsHandler) throws SQLException, DbExecutorException {
 
     var selectByIdQueryBuilderService = new SelectByIdQueryBuilder();
     try {
       Traverser.traverse(clazz.getDeclaredConstructor().newInstance(), selectByIdQueryBuilderService, null);
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      throw new DbExecutorException(e);
     }
 
     try (var prepareStatement = this.connection.prepareStatement(selectByIdQueryBuilderService.getQueryString())) {

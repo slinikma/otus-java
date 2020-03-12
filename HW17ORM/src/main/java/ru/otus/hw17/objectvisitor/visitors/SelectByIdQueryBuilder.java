@@ -1,7 +1,7 @@
 package ru.otus.hw17.objectvisitor.visitors;
 
 import lombok.Getter;
-import ru.otus.hw17.annotations.Id;
+import ru.otus.hw17.annotations.MyOrmId;
 import ru.otus.hw17.annotations.TraverserSkip;
 import ru.otus.hw17.objectvisitor.TraversedField;
 import ru.otus.hw17.objectvisitor.Visitor;
@@ -46,7 +46,7 @@ public class SelectByIdQueryBuilder implements Visitor {
     // Сохраняем поля
     fieldList.add(field);
 
-    if (field.isAnnotationPresent(Id.class)) {
+    if (field.isAnnotationPresent(MyOrmId.class)) {
       throw new IllegalArgumentException("Array can't be an field id!");
     }
 
@@ -82,7 +82,7 @@ public class SelectByIdQueryBuilder implements Visitor {
     // Сохраняем поля
     fieldList.add(field);
 
-    if (field.isAnnotationPresent(Id.class)) {
+    if (field.isAnnotationPresent(MyOrmId.class)) {
       // Сохраняем поле id
       this.idFieldName = field.getName();
       this.idFieldValue = field.getBoxedPrimitive();
@@ -142,7 +142,7 @@ public class SelectByIdQueryBuilder implements Visitor {
     // Сохраняем поля
     fieldList.add(field);
 
-    if (field.isAnnotationPresent(Id.class)) {
+    if (field.isAnnotationPresent(MyOrmId.class)) {
       // Сохраняем поле id
       this.idFieldName = field.getName();
       this.idFieldValue = field.getValue();

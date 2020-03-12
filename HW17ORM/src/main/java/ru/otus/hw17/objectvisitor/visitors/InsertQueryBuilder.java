@@ -1,8 +1,7 @@
 package ru.otus.hw17.objectvisitor.visitors;
 
 import lombok.Getter;
-import ru.otus.hw17.annotations.Id;
-import ru.otus.hw17.annotations.TraverserSkip;
+import ru.otus.hw17.annotations.MyOrmId;
 import ru.otus.hw17.objectvisitor.TraversedField;
 import ru.otus.hw17.objectvisitor.Visitor;
 import ru.otus.hw17.objectvisitor.visitable.types.ArrayField;
@@ -11,9 +10,6 @@ import ru.otus.hw17.objectvisitor.visitable.types.PrimitiveField;
 import ru.otus.hw17.objectvisitor.visitable.types.StringField;
 
 import java.lang.reflect.Constructor;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +53,7 @@ public class InsertQueryBuilder implements Visitor {
       classConstructor = field.getFieldOfObject().getClass().getConstructor();
     }
 
-    if (field.isAnnotationPresent(Id.class)) {
+    if (field.isAnnotationPresent(MyOrmId.class)) {
       throw new IllegalArgumentException("Array can't be an field id!");
     }
 
@@ -97,7 +93,7 @@ public class InsertQueryBuilder implements Visitor {
       classConstructor = field.getFieldOfObject().getClass().getConstructor();
     }
 
-    if (field.isAnnotationPresent(Id.class)) {
+    if (field.isAnnotationPresent(MyOrmId.class)) {
       // Сохраняем поле id
       this.idFieldName = field.getName();
       this.idFieldValue = field.getBoxedPrimitive();
@@ -158,7 +154,7 @@ public class InsertQueryBuilder implements Visitor {
       classConstructor = field.getFieldOfObject().getClass().getConstructor();
     }
 
-    if (field.isAnnotationPresent(Id.class)) {
+    if (field.isAnnotationPresent(MyOrmId.class)) {
       // Сохраняем поле id
       this.idFieldName = field.getName();
       this.idFieldValue = field.getValue();

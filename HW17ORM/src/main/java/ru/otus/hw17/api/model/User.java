@@ -3,6 +3,7 @@ package ru.otus.hw17.api.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ru.otus.hw17.annotations.MyOrmId;
 import ru.otus.hw17.annotations.TraverserSkip;
 import ru.otus.hw17.api.model.hibernate.AddressDataSet;
 import ru.otus.hw17.api.model.hibernate.PhoneDataSet;
@@ -19,7 +20,7 @@ import java.util.Objects;
 public class User {
 
   @Getter
-  @ru.otus.hw17.annotations.Id
+  @MyOrmId
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   @Column(name = "user_id")

@@ -1,6 +1,5 @@
 package ru.otus.hw17.jdbc.sessionmanager;
 
-import ru.otus.hw17.api.sessionmanager.DatabaseSession;
 import ru.otus.hw17.api.sessionmanager.SessionManager;
 import ru.otus.hw17.api.sessionmanager.SessionManagerException;
 
@@ -34,7 +33,6 @@ public class SessionManagerJdbc implements SessionManager {
   @Override
   public void commitSession() {
     try {
-      // TODO: почему не boolean isConnected() ?
       databaseSession.checkConnection();
       databaseSession.getConnection().commit();
     } catch (SQLException ex) {
@@ -45,7 +43,6 @@ public class SessionManagerJdbc implements SessionManager {
   @Override
   public void rollbackSession() {
     try {
-      // TODO: почему не boolean isConnected() ?
       databaseSession.checkConnection();
       databaseSession.getConnection().rollback();
     } catch (SQLException ex) {
@@ -56,7 +53,6 @@ public class SessionManagerJdbc implements SessionManager {
   @Override
   public void close() {
     try {
-      // TODO: почему не boolean isConnected() ?
       databaseSession.checkConnection();
       databaseSession.getConnection().close();
     } catch (SQLException ex) {
@@ -67,7 +63,6 @@ public class SessionManagerJdbc implements SessionManager {
   @Override
   public DatabaseSessionJdbc getCurrentSession() {
     try {
-      // TODO: почему не boolean isConnected() ?
       databaseSession.checkConnection();
       return databaseSession;
     } catch (SQLException ex) {

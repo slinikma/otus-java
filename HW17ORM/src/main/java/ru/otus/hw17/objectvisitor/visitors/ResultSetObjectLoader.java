@@ -45,30 +45,7 @@ public class ResultSetObjectLoader implements Visitor {
 
     try {
       field.getField().setAccessible(true);
-
-      // TODO: можно как-то проще сделать???
-      if (field.getBoxedPrimitive().getClass() == Boolean.class) {
-        boolean fieldValue = resultSet.getBoolean(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      } else if (field.getBoxedPrimitive().getClass() == Byte.class) {
-        byte fieldValue = resultSet.getByte(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      } else if (field.getBoxedPrimitive().getClass() == Short.class) {
-        short fieldValue = resultSet.getShort(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      } else if (field.getBoxedPrimitive().getClass() == Integer.class) {
-        int fieldValue = resultSet.getInt(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      } else if (field.getBoxedPrimitive().getClass() == Long.class) {
-        long fieldValue = resultSet.getLong(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      } else if (field.getBoxedPrimitive().getClass() == Float.class) {
-        float fieldValue = resultSet.getFloat(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      } else if (field.getBoxedPrimitive().getClass() == Double.class) {
-        double fieldValue = resultSet.getDouble(field.getName());
-        field.getField().set(field.getFieldOfObject(), fieldValue);
-      }
+      field.getField().set(field.getFieldOfObject(), resultSet.getObject(field.getName()));
     } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }
