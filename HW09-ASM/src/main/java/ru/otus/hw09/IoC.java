@@ -5,6 +5,8 @@ import ru.otus.hw09.annotations.Log;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IoC {
 
@@ -16,15 +18,27 @@ public class IoC {
 
   static class MyInvocationHandler implements InvocationHandler {
     private final MyClassInterface myClass;
+    private Set<Method> methodsToPrint;
 
     MyInvocationHandler(MyClassInterface myClass) {
       this.myClass = myClass;
+      this.methodsToPrint = new HashSet<>();
+
+      for (Method method : myClass.getClass().getDeclaredMethods()) {
+        if (method.isAnnotationPresent(Log.class)) {
+          try {
+            this.methodsToPrint.add(MyClassInterface.class.getDeclaredMethod(method.getName(), method.getParameterTypes()));
+          } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+          }
+        }
+      }
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       StringBuilder log = new StringBuilder();
-      if (myClass.getClass().getDeclaredMethod(method.getName(), method.getParameterTypes()).isAnnotationPresent(Log.class)) {
+      if (methodsToPrint.contains(method)) {
         log.append("executed method: ")
             .append(method.getName())
             .append("; params: ");
