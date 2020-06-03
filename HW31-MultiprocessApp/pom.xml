@@ -10,9 +10,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>HW31-MultiprocessApp</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>dbApp</module>
+    <module>frontApp</module>
+    <module>MS</module>
+    <module>MSClient</module>
+  </modules>
 
   <properties>
     <java.version>11</java.version>
+    <artifact.version>1.12.0</artifact.version>
     <annotations.version>17.0.0</annotations.version>
   </properties>
 
@@ -27,12 +35,13 @@
       </dependency>
       <!--endregion-->
 
-      <!-- Spring AspectJ support -->
-      <!--      <dependency>-->
-      <!--        <groupId>org.springframework</groupId>-->
-      <!--        <artifactId>spring-aspects</artifactId>-->
-      <!--        <version>${spring.version}</version>-->
-      <!--      </dependency>-->
+      <!--region modules -->
+      <dependency>
+        <groupId>ru.otus</groupId>
+        <artifactId>HW31-MultiprocessApp-MSClient</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <!--endregion-->
     </dependencies>
   </dependencyManagement>
 

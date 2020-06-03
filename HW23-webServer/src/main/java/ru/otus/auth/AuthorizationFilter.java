@@ -33,7 +33,7 @@ public class AuthorizationFilter implements Filter {
       response.setHeader("Location", "http://localhost:8080/login");
       response.setStatus(303); // TODO: правильно ли использовать "See Other" ?
     } else {
-      // Если передал Cookie JSESSIONID и она валидна, тогда передаём по цепочке дальше в следующий сервлет
+      // Если передал Cookie JSESSIONID и она валидна, тогда передаём по цепочке далльше в следующий сервлет
       filterChain.doFilter(servletRequest, servletResponse);
     }
   }
