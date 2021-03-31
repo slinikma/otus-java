@@ -40,7 +40,7 @@
     <!--endregion-->
 
     <!--region Libs -->
-    <com.google.guava.version>28.0-jre</com.google.guava.version>
+    <com.google.guava.version>29.0-jre</com.google.guava.version>
     <!--endregion-->
 
     <!--region Testing - JUnit, AssertJ, Mockito, Hacrest -->
